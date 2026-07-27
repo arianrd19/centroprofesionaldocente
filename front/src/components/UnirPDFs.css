@@ -1,0 +1,356 @@
+/* Sobrescribir el fondo blanco del contenedor padre del Panel solo para esta página */
+.panel-content>div:has(.unir-pdfs-wrapper),
+.panel-content>div .unir-pdfs-wrapper {
+  background: #f1f5f9 !important;
+}
+
+.unir-pdfs-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: transparent !important;
+  color: #1a1f2e !important;
+}
+
+/* Forzar fondo gris claro usando selector más específico */
+.panel-content div[style*="background"] .unir-pdfs-wrapper {
+  background: #f1f5f9 !important;
+}
+
+.panel-content>div:has(.unir-pdfs-wrapper) {
+  background: #f1f5f9 !important;
+}
+
+.unir-pdfs-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.unir-pdfs-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.unir-pdfs-header p {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 1rem;
+}
+
+.unir-pdfs-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+.form-section h2 {
+  font-size: 1.25rem;
+  color: #ffffff !important;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.5) !important;
+  font-weight: 700;
+}
+
+.search-box {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid rgba(59, 130, 246, 0.4) !important;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: rgba(15, 23, 42, 0.6) !important;
+  color: #ffffff !important;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: #ffffff !important;
+}
+
+.btn-search {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%) !important;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-search:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-search:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.certificado-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%) !important;
+  border-radius: 8px;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  border-left: 4px solid #10b981 !important;
+}
+
+.certificado-info h3 {
+  font-size: 1rem;
+  color: #ffffff !important;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.certificado-info p {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.certificado-info p strong {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.file-upload-area {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.file-label {
+  display: block;
+  padding: 2rem;
+  border: 2px dashed rgba(59, 130, 246, 0.5) !important;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(15, 23, 42, 0.6) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.file-label:hover {
+  border-color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.btn-remove-file {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-remove-file:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.alert-error {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.alert-success {
+  background: #d1fae5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.btn-unir {
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%) !important;
+  color: #ffffff !important;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-unir:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-unir:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 968px) {
+  .unir-pdfs-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .form-section {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .unir-pdfs-container {
+    padding: 0.5rem;
+  }
+
+  .unir-pdfs-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-section {
+    padding: 1rem;
+  }
+
+  .form-section h2 {
+    font-size: 1.125rem;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .btn-search {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-unir {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .unir-pdfs-header h1 {
+    font-size: 1.375rem;
+  }
+
+  .unir-pdfs-header p {
+    font-size: 0.9375rem;
+  }
+
+  .form-section {
+    padding: 0.875rem;
+  }
+
+  .search-input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9375rem;
+  }
+
+  .btn-search {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  .file-label {
+    padding: 1.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .btn-unir {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+
+  .certificado-info {
+    padding: 0.875rem;
+  }
+
+  .certificado-info h3 {
+    font-size: 0.9375rem;
+  }
+
+  .certificado-info p {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .unir-pdfs-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .form-section h2 {
+    font-size: 1rem;
+  }
+
+  .search-input {
+    padding: 0.5625rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .file-label {
+    padding: 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-unir {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+  }
+}

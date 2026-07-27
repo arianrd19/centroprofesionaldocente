@@ -1,0 +1,107 @@
+.dash-menciones__cards {
+  display: none;
+  gap: 12px;
+}
+
+.dash-menciones__empty {
+  margin: 0;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--color-gray);
+  font-size: 0.9rem;
+}
+
+.dash-menciones__card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-left: 4px solid #126988;
+}
+
+.dash-menciones__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.dash-menciones__card-nro {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-md);
+  background: #e8f4f8;
+  color: #126988;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.dash-menciones__card-horas {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #24bc57;
+  white-space: nowrap;
+}
+
+.dash-menciones__card-title {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.dash-menciones__card-meta {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--color-gray);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.dash-menciones__table-wrap--desktop {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .dash-menciones__table-wrap--desktop {
+    display: none;
+  }
+
+  .dash-menciones__cards {
+    display: grid;
+  }
+
+  .dash-menciones .dash-search {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .dash-menciones .dash-search input,
+  .dash-menciones .dash-search select {
+    min-width: 0;
+    width: 100%;
+    min-height: 48px;
+    font-size: max(16px, 0.9rem);
+  }
+
+  .dash-menciones .dash-btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .dash-menciones .dash-pagination {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dash-menciones .dash-pagination .dash-btn {
+    width: 100%;
+  }
+}

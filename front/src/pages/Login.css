@@ -1,0 +1,450 @@
+/* Variables locales para Login (o usar globales si ya existen) */
+:root {
+  --login-primary: #0f172a;
+  --login-accent: #2563eb;
+  --login-text: #334155;
+  --login-text-light: #64748b;
+  --login-bg: #ffffff;
+  --input-border: #e2e8f0;
+  --input-focus: #3b82f6;
+}
+
+.login-page {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--login-bg);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.login-split-screen {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+/* --- Left Side: Branding --- */
+.login-branding {
+  flex: 1.2;
+  /* Slightly larger image area */
+  position: relative;
+  background-color: #000;
+  display: flex;
+  align-items: flex-end;
+  /* Text at bottom */
+  overflow: hidden;
+}
+
+.branding-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: transform 10s ease;
+  /* Subtle zoom effect */
+}
+
+/* Optional: animating the background image slowly */
+.login-branding:hover .branding-image {
+  transform: scale(1.05);
+}
+
+.branding-overlay {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom,
+      rgba(15, 23, 42, 0.2) 0%,
+      /* Lighter overlay now that text is gone */
+      rgba(15, 23, 42, 0.4) 100%);
+}
+
+/* --- Right Side: Form --- */
+.login-form-container {
+  flex: 1;
+  /* Forms takes remaining space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #ebeff5;
+  /* Darker blue-gray to contrast with the white card */
+  position: relative;
+}
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 440px;
+  animation: fadeIn 0.6s ease-out;
+  background: white;
+  padding: 3rem;
+  /* Increased padding for better breathing room */
+  border-radius: 20px;
+  /* Softer corners */
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* Subtle highlight */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  /* Stronger shadow to pop against the gray */
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.form-logo {
+  height: 60px;
+  width: auto;
+  margin-bottom: 1.5rem;
+}
+
+.form-header h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--login-primary);
+  margin-bottom: 0.5rem;
+}
+
+.form-header p {
+  color: var(--login-text-light);
+  font-size: 0.95rem;
+}
+
+.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--login-text);
+  margin-left: 2px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  border: 1.5px solid var(--input-border);
+  border-radius: 8px;
+  /* Slightly rounded corners */
+  transition: all 0.2s ease;
+  background-color: #f8fafc;
+  /* Very light gray bg for inputs */
+  color: var(--login-primary);
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.input-wrapper input::placeholder {
+  color: #cbd5e1;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.5rem;
+}
+
+.forgot-password {
+  font-size: 0.875rem;
+  color: var(--login-accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+  color: #1d4ed8;
+}
+
+.btn-submit {
+  margin-top: 1rem;
+  background: var(--gradient-primary, linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%));
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.875rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  /* Fixed height to prevent layout shift with loader */
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+  filter: brightness(1.05);
+}
+
+.btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.error-alert {
+  padding: 0.75rem;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  color: #b91c1c;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+.icon-sm {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.form-footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+/* Loader Animation */
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsive adjustments --- */
+@media (max-width: 1024px) {
+  .login-branding {
+    flex: 0.8;
+    /* Reduce branding width slightly on smaller laptops */
+  }
+
+  .branding-content h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-split-screen {
+    flex-direction: column;
+  }
+
+  .login-branding {
+    flex: none;
+    height: 30vh;
+    /* Takes top 30% of screen */
+    min-height: 200px;
+  }
+
+  .branding-content {
+    padding: 2rem;
+    justify-content: center;
+  }
+
+  .branding-content h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .branding-content p {
+    font-size: 1rem;
+    display: none;
+    /* Hide paragraph on mobile to save space */
+  }
+
+  .login-form-container {
+    flex: 1;
+    padding: 2rem 1.5rem;
+    align-items: flex-start;
+    /* Align closer to top */
+  }
+
+  .login-form-wrapper {
+    margin-top: 1rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .form-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-logo {
+    height: 50px;
+  }
+}
+
+@media (max-width: 640px) {
+  .login-form-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .login-form-wrapper {
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .form-header h2 {
+    font-size: 1.375rem;
+  }
+
+  .form-logo {
+    height: 45px;
+  }
+
+  .form-group label {
+    font-size: 0.8125rem;
+  }
+
+  .input-wrapper input {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9375rem;
+  }
+
+  .btn-submit {
+    padding: 0.75rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-branding {
+    height: 25vh;
+    min-height: 150px;
+  }
+
+  .login-form-container {
+    padding: 1rem 0.75rem;
+  }
+
+  .login-form-wrapper {
+    padding: 1.25rem 1rem;
+    border-radius: 12px;
+  }
+
+  .form-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-logo {
+    height: 40px;
+    margin-bottom: 1rem;
+  }
+
+  .form-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .form-header p {
+    font-size: 0.875rem;
+  }
+
+  .modern-form {
+    gap: 1rem;
+  }
+
+  .form-group {
+    gap: 0.375rem;
+  }
+
+  .form-group label {
+    font-size: 0.75rem;
+  }
+
+  .input-wrapper input {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-submit {
+    padding: 0.625rem;
+    font-size: 0.875rem;
+    height: 44px;
+  }
+}

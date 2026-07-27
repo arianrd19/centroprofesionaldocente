@@ -1,0 +1,26 @@
+# Configuración para React Router - Versión simplificada
+RewriteEngine On
+RewriteBase /
+
+# No reescribir archivos que existen
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirigir todo lo demás a index.html
+RewriteRule ^(.*)$ /index.html [L]
+
+# Headers de seguridad
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "DENY"
+  Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Cache para assets estáticos
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>

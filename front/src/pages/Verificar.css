@@ -1,0 +1,293 @@
+.verificar-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  animation: fadeInUp 0.5s ease;
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7fa;
+  position: relative;
+}
+
+.verificar-card {
+  background: rgba(26, 31, 46, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 3.5rem;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+.verificar-logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: transparent;
+  border-radius: 16px;
+}
+
+.verificar-logo {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.verificar-card h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 0.75rem;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.verificar-card h1 span.verificar-text {
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.verificar-card h1 span.certificado-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.verificar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #ffffff !important;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.input-group input {
+  padding: 1rem 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  color: #1a1f2e;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.input-group input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.input-group input:focus {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 
+    0 0 0 4px rgba(59, 130, 246, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+
+.input-group input:disabled {
+  background: rgba(255, 255, 255, 0.03);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  color: var(--color-white);
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 16px rgba(16, 185, 129, 0.4),
+    0 2px 8px rgba(59, 130, 246, 0.3);
+  letter-spacing: 0.5px;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 8px 24px rgba(16, 185, 129, 0.5),
+    0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border-left: 4px solid #ef4444;
+  animation: fadeInDown 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+@media (max-width: 768px) {
+  .verificar-container {
+    padding: 1.5rem;
+  }
+
+  .verificar-card {
+    padding: 2rem;
+  }
+
+  .verificar-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .verificar-logo {
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 640px) {
+  .verificar-container {
+    padding: 1rem;
+  }
+
+  .verificar-card {
+    padding: 1.5rem;
+    border-radius: 20px;
+  }
+
+  .verificar-logo-container {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .verificar-logo {
+    max-width: 150px;
+  }
+
+  .verificar-card h1 {
+    font-size: 1.375rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .verificar-form {
+    gap: 1.25rem;
+  }
+
+  .input-group input {
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .btn-primary {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .verificar-container {
+    padding: 0.75rem;
+  }
+
+  .verificar-card {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  .verificar-logo-container {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .verificar-logo {
+    max-width: 120px;
+  }
+
+  .verificar-card h1 {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.9375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .input-group label {
+    font-size: 0.9375rem;
+  }
+
+  .input-group input {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-primary {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    width: 100%;
+  }
+
+  .error-message {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+  }
+}

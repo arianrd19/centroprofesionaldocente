@@ -1,0 +1,10 @@
+# Versión alternativa más simple del .htaccess
+# Si la versión principal no funciona, prueba esta
+
+RewriteEngine On
+RewriteBase /
+
+# Si el archivo o directorio no existe, redirigir a index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L,QSA]

@@ -1,0 +1,268 @@
+/* Mi Dashboard — panel de ventas del asesor */
+
+.dash-panel {
+  --dp-ink: #22262b;
+  --dp-muted: #7b7370;
+  --dp-green: #24bc57;
+  --dp-brand: #126988;
+  --dp-orange: #d97706;
+  --dp-purple: #8b5cf6;
+  --dp-card: #fafcfc;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.dash-panel__header {
+  margin-bottom: 30px;
+}
+
+.dash-panel__header h1 {
+  font-size: clamp(26px, 5vw, 32px);
+  color: var(--dp-ink);
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.dash-panel__header p {
+  color: var(--dp-muted);
+  font-size: clamp(14px, 3.5vw, 15px);
+  margin: 0;
+}
+
+/* Buscador */
+.dash-panel__search {
+  margin-bottom: 24px;
+}
+
+.dash-panel__search input {
+  width: 100%;
+  max-width: 360px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #d8dde0;
+  font-size: 14px;
+  color: var(--dp-ink);
+  background: var(--dp-card);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.dash-panel__search input:focus {
+  outline: none;
+  border-color: var(--dp-brand);
+  box-shadow: 0 0 0 3px rgba(18, 105, 136, 0.15);
+}
+
+@media (max-width: 640px) {
+  .dash-panel__search input {
+    max-width: none;
+  }
+}
+
+/* Tabla */
+.dash-panel__section {
+  margin-top: 40px;
+}
+
+.dash-panel__section h2 {
+  font-size: clamp(20px, 4vw, 24px);
+  color: var(--dp-ink);
+  margin: 0 0 20px;
+  font-weight: 700;
+}
+
+.dash-panel__table-wrap {
+  background: var(--dp-card);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(34, 38, 43, 0.08);
+  overflow: hidden;
+}
+
+.dash-panel__table-scroll {
+  overflow-x: auto;
+}
+
+.dash-panel__table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+.dash-panel__table thead {
+  background: var(--dp-ink);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.dash-panel__table th {
+  text-align: left;
+  font-size: 12px;
+  color: #fafcfc;
+  padding: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.dash-panel__table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  color: var(--dp-ink);
+}
+
+.dash-panel__table tbody tr:hover {
+  background: rgba(137, 189, 194, 0.05);
+}
+
+.dash-panel__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.dash-panel__empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--dp-muted);
+  font-size: 14px;
+}
+
+/* Tarjetas móvil */
+.dash-panel__sale-cards {
+  display: none;
+  margin-top: 12px;
+}
+
+.dash-panel__sale-card--cert {
+  border-left-color: var(--dp-orange);
+}
+
+.dash-panel__sale-card--serums {
+  border-left-color: var(--dp-purple);
+}
+
+.dash-panel__empty-inline {
+  color: var(--dp-muted);
+  margin: 0;
+  padding: 8px 0 4px;
+}
+
+.dash-panel__sale-card {
+  background: var(--dp-card);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(34, 38, 43, 0.08);
+  border-left: 4px solid var(--dp-brand);
+}
+
+.dash-panel__sale-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 12px;
+}
+
+.dash-panel__sale-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dp-ink);
+  line-height: 1.2;
+}
+
+.dash-panel__sale-date {
+  font-size: 13px;
+  color: var(--dp-muted);
+  margin-top: 4px;
+}
+
+.dash-panel__sale-amount {
+  background: var(--dp-green);
+  color: #fafcfc;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.dash-panel__sale-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.dash-panel__sale-field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.dash-panel__sale-field-label {
+  font-size: 12px;
+  color: var(--dp-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.dash-panel__sale-field-value {
+  font-size: 14px;
+  color: var(--dp-ink);
+  font-weight: 500;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .dash-panel__header {
+    margin-bottom: 22px;
+  }
+
+  .dash-panel__section {
+    margin-top: 28px;
+  }
+
+  .dash-panel__section h2 {
+    font-size: 1.15rem;
+    margin-bottom: 14px;
+  }
+
+  .dash-panel__table-wrap--desktop {
+    display: none;
+  }
+
+  .dash-panel__sale-cards {
+    display: grid;
+  }
+
+  .dash-panel__table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-panel__header h1 {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .dash-panel__sale-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dash-panel__sale-amount {
+    align-self: flex-start;
+  }
+}
+
+@media (min-width: 769px) {
+  .dash-panel__sale-cards--mobile-only {
+    display: none;
+  }
+}

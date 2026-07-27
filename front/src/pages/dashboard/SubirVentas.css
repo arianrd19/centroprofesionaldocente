@@ -1,0 +1,883 @@
+/* Formulario Subir ventas / Subir certificados — mobile-first friendly */
+
+.venta-form {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+.venta-form__header {
+  margin-bottom: 1.5rem;
+}
+
+.venta-form__header h1 {
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 700;
+  color: var(--color-dark);
+  margin: 0 0 0.35rem;
+}
+
+.venta-form__header p {
+  margin: 0;
+  color: var(--color-gray);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.venta-form__card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.15rem, 3vw, 1.75rem);
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.venta-form__section-title {
+  grid-column: 1 / -1;
+  margin: 0.25rem 0 0.15rem;
+  padding-bottom: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #126988;
+  border-bottom: 2px solid rgba(18, 105, 136, 0.15);
+}
+
+.venta-form__section-title--spaced {
+  margin-top: 0.5rem;
+}
+
+.venta-form__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+.venta-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.venta-form__field--full {
+  grid-column: 1 / -1;
+}
+
+.venta-form__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray);
+}
+
+.venta-form__label span {
+  color: #dc2626;
+}
+
+.venta-form__input,
+.venta-form__select {
+  width: 100%;
+  padding: 0.72rem 0.85rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  font-size: max(16px, 0.9rem);
+  color: var(--color-dark);
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.venta-form__input:focus,
+.venta-form__select:focus {
+  outline: none;
+  border-color: var(--color-green);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+.venta-form__input--error {
+  border-color: #fca5a5;
+  background: #fffbfb;
+}
+
+.venta-form__input--error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.venta-form__date-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.venta-form__date-row .venta-form__input {
+  flex: 1;
+  min-width: 0;
+}
+
+.venta-form__btn--today {
+  flex-shrink: 0;
+  padding: 0.72rem 1rem;
+  min-height: 48px;
+  white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.venta-form__lookup {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.venta-form__lookup--ok {
+  color: #047857;
+}
+
+.venta-form__lookup--warn {
+  color: #b45309;
+}
+
+.venta-form__cliente-card {
+  grid-column: 1 / -1;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid #e2e8f0;
+  padding: 1rem 1.1rem;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.venta-form__cliente-card--found {
+  border-color: #6ee7b7;
+  background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%);
+}
+
+.venta-form__cliente-card--new {
+  border-color: #fcd34d;
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.venta-form__cliente-card--error {
+  border-color: #fca5a5;
+  background: #fffbfb;
+}
+
+.venta-form__cliente-card--searching {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.venta-form__cliente-status {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.venta-form__cliente-status-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.venta-form__cliente-status strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--color-dark);
+  margin-bottom: 0.15rem;
+}
+
+.venta-form__cliente-status p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-gray);
+  line-height: 1.45;
+}
+
+.venta-form__cliente-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+.venta-form__input--locked {
+  background: #f1f5f9;
+  color: #334155;
+  cursor: not-allowed;
+  border-color: #cbd5e1;
+}
+
+.venta-form__input--locked:focus {
+  box-shadow: none;
+  border-color: #cbd5e1;
+}
+
+.venta-form__input:invalid:not(:placeholder-shown),
+.venta-form__select:invalid {
+  border-color: #fca5a5;
+}
+
+/* —— Comprobante —— */
+.venta-form__upload {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.venta-form__dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 168px;
+  padding: 1.25rem 1rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  text-align: center;
+}
+
+.venta-form__dropzone:hover {
+  border-color: #126988;
+  background: linear-gradient(180deg, #f0f9ff 0%, #e8f4f8 100%);
+}
+
+.venta-form__dropzone--drag {
+  border-color: var(--color-green);
+  background: #ecfdf5;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+}
+
+.venta-form__dropzone--filled {
+  border-style: solid;
+  border-color: #86efac;
+  background: #f0fdf4;
+  min-height: auto;
+  padding: 1rem;
+  cursor: default;
+}
+
+.venta-form__dropzone--error {
+  border-color: #f87171;
+  background: #fef2f2;
+}
+
+.venta-form__dropzone-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.venta-form__dropzone-icon {
+  font-size: 2.25rem;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.venta-form__dropzone-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin: 0;
+}
+
+.venta-form__dropzone-text {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--color-gray);
+  max-width: 320px;
+  line-height: 1.45;
+}
+
+.venta-form__dropzone-btn {
+  margin-top: 0.15rem;
+  padding: 0.65rem 1.15rem;
+  min-height: 44px;
+  border: none;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--gradient-primary);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.venta-form__dropzone-btn:hover {
+  filter: brightness(1.03);
+}
+
+.venta-form__file-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  text-align: left;
+}
+
+.venta-form__file-thumb {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: var(--shadow-sm);
+  background: #fff;
+}
+
+.venta-form__file-pdf {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 1.75rem;
+  font-weight: 800;
+  box-shadow: var(--shadow-sm);
+}
+
+.venta-form__file-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.venta-form__file-name {
+  margin: 0 0 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  word-break: break-word;
+}
+
+.venta-form__file-size {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--color-gray);
+}
+
+.venta-form__file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.venta-form__file-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.9rem;
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #126988;
+  cursor: pointer;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.venta-form__file-link:hover {
+  background: #f0f9ff;
+}
+
+.venta-form__file-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.9rem;
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid #fecaca;
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #b91c1c;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.venta-form__file-remove:hover {
+  background: #fef2f2;
+}
+
+.venta-form__hint {
+  font-size: 0.75rem;
+  color: var(--color-gray);
+}
+
+.venta-form__field-error {
+  font-size: 0.78rem;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.venta-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid #eef2f7;
+}
+
+.venta-form__btn {
+  padding: 0.78rem 1.5rem;
+  min-height: 48px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.venta-form__btn--primary {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.venta-form__btn--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-green);
+}
+
+.venta-form__btn--ghost {
+  background: #f1f5f9;
+  color: var(--color-dark);
+}
+
+.venta-form__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.venta-form__success {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  font-size: 0.9rem;
+}
+
+.venta-form__error {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  font-size: 0.9rem;
+}
+
+/* —— Buscador de menciones —— */
+.venta-form__mencion-picker {
+  position: relative;
+}
+
+.venta-form__mencion-search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.venta-form__mencion-filter {
+  font-size: 0.75rem;
+  color: #126988;
+  font-weight: 600;
+}
+
+.venta-form__mencion-panel {
+  margin-top: 0.5rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.venta-form__mencion-panel-head {
+  padding: 0.55rem 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray);
+  background: #f8fafc;
+  border-bottom: 1px solid #eef2f7;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.venta-form__mencion-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.venta-form__mencion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem;
+  min-height: 52px;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.venta-form__mencion-item:hover,
+.venta-form__mencion-item:focus-visible {
+  background: #f0f9ff;
+  outline: none;
+}
+
+.venta-form__mencion-item-nro {
+  flex-shrink: 0;
+  min-width: 3.25rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-md);
+  background: #e8f4f8;
+  color: #126988;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.venta-form__mencion-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.venta-form__mencion-item-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  line-height: 1.35;
+}
+
+.venta-form__mencion-item-meta {
+  font-size: 0.76rem;
+  color: var(--color-gray);
+  line-height: 1.35;
+}
+
+.venta-form__mencion-empty {
+  margin: 0;
+  padding: 1rem 0.85rem;
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+
+.venta-form__mencion-empty--error {
+  color: #b91c1c;
+}
+
+.venta-form__mencion-selected {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid #86efac;
+  border-radius: var(--radius-md);
+  background: #f0fdf4;
+}
+
+.venta-form__mencion-selected-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.venta-form__mencion-badge {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-md);
+  background: #dcfce7;
+  color: #166534;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.venta-form__mencion-selected-title {
+  margin: 0 0 0.25rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  line-height: 1.4;
+}
+
+.venta-form__mencion-selected-meta {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--color-gray);
+}
+
+@media (max-width: 968px) {
+  .venta-form__card {
+    padding: 1rem 0.9rem;
+    border-radius: var(--radius-md);
+  }
+
+  .venta-form__header {
+    margin-bottom: 1rem;
+  }
+
+  .venta-form__header p {
+    font-size: 0.85rem;
+  }
+
+  .venta-form__input,
+  .venta-form__select {
+    min-height: 48px;
+    padding: 0.8rem 0.9rem;
+  }
+
+  .venta-form__cliente-card {
+    padding: 0.9rem;
+  }
+
+  .venta-form__file-preview {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .venta-form__file-thumb,
+  .venta-form__file-pdf {
+    width: 88px;
+    height: 88px;
+    align-self: center;
+  }
+
+  .venta-form__file-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .venta-form__file-link,
+  .venta-form__file-remove {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .venta-form__dropzone {
+    min-height: 150px;
+    padding: 1rem 0.75rem;
+  }
+
+  .venta-form__dropzone-title {
+    font-size: 0.9rem;
+  }
+
+  .venta-form__dropzone-text {
+    font-size: 0.78rem;
+    max-width: 100%;
+  }
+
+  .venta-form__dropzone-btn {
+    width: 100%;
+    max-width: 220px;
+  }
+
+  .venta-form__mencion-panel {
+    max-height: min(48dvh, 300px);
+  }
+
+  .venta-form__mencion-selected {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .venta-form__mencion-selected .venta-form__file-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  .venta-form__mencion-item-nro {
+    min-width: 2.75rem;
+    font-size: 0.68rem;
+  }
+
+  .venta-form__actions {
+    flex-direction: column;
+    gap: 0.65rem;
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    margin: 1.15rem -0.9rem -0.9rem;
+    padding: 0.85rem 0.9rem;
+    padding-bottom: max(0.85rem, env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, #fff 18%);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #eef2f7;
+    box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.06);
+  }
+
+  .venta-form__card {
+    scroll-margin-bottom: 5rem;
+  }
+
+  .venta-form {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .venta-form__btn {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  .venta-form__btn--primary {
+    order: -1;
+  }
+
+  .venta-form__success,
+  .venta-form__error {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .venta-form__card {
+    padding: 0.85rem 0.75rem;
+    border-left: none;
+    border-right: none;
+    border-radius: var(--radius-md);
+  }
+
+  .venta-form__section-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+  }
+
+  .venta-form__label {
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  .venta-form__grid {
+    gap: 0.8rem;
+  }
+
+  .venta-form__cliente-card {
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+  }
+
+  .venta-form__cliente-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
+
+  .venta-form__cliente-status-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.9rem;
+  }
+
+  .venta-form__date-row {
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .venta-form__date-row .venta-form__btn--today {
+    width: 100%;
+  }
+
+  .venta-form__actions {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    margin-bottom: -0.75rem;
+    padding-inline: 0.75rem;
+  }
+
+  .venta-form__mencion-item {
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 0.8rem 0.75rem;
+  }
+
+  .venta-form__mencion-item-nro {
+    align-self: flex-start;
+  }
+
+  .venta-form__mencion-item-title {
+    font-size: 0.85rem;
+  }
+
+  .venta-form__mencion-item-meta {
+    font-size: 0.72rem;
+  }
+
+  .venta-form__mencion-panel {
+    max-height: min(42dvh, 260px);
+  }
+}
+
+/* Tablet+: dos columnas en campos del formulario */
+@media (min-width: 640px) {
+  .venta-form__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.15rem;
+  }
+
+  .venta-form__cliente-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.15rem;
+  }
+}
