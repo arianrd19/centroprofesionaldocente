@@ -275,8 +275,8 @@ function SubirVentasSerums() {
             />
           </Field>
 
-          <Field label="Entidad financiera" required>
-            <select className="venta-form__select" value={form.entidad} onChange={set('entidad')} required>
+          <Field label="Entidad financiera" required error={fieldErrors.entidad}>
+            <select className={inputClass(fieldErrors.entidad)} value={form.entidad} onChange={set('entidad')} required>
               <option value="">Seleccionar...</option>
               {ENTIDADES_FINANCIERAS.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -284,8 +284,8 @@ function SubirVentasSerums() {
             </select>
           </Field>
 
-          <Field label="Cuotas" required>
-            <select className="venta-form__select" value={form.cuotas} onChange={set('cuotas')} required>
+          <Field label="Cuotas" required error={fieldErrors.cuotas}>
+            <select className={inputClass(fieldErrors.cuotas)} value={form.cuotas} onChange={set('cuotas')} required>
               <option value="">Seleccionar...</option>
               {CUOTAS_OPCIONES.map((op) => {
                 const value = typeof op === 'string' ? op : op.value

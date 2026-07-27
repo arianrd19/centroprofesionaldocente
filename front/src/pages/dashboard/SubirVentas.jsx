@@ -63,6 +63,7 @@ function isValidOperacion(operacion) {
 
 function validateVentaForm(form) {
   const errors = {}
+  if (!form.cliente.trim()) errors.cliente = 'Ingresa el nombre completo del cliente.'
   if (!isValidDni(form.dni)) errors.dni = 'El DNI debe tener exactamente 8 dígitos numéricos.'
   if (!isValidCelular(form.celular)) errors.celular = 'El celular debe tener exactamente 9 dígitos.'
   if (!isValidCorreo(form.correo)) errors.correo = 'El correo debe incluir @ y .com (ej. nombre@gmail.com).'
@@ -70,6 +71,10 @@ function validateVentaForm(form) {
   if (!isValidMonto(form.monto_total)) errors.monto_total = 'El monto total debe ser un número mayor a 0 (ej. 150 o 150.50).'
   if (!isValidMonto(form.monto_depositado)) errors.monto_depositado = 'El monto depositado debe ser un número mayor a 0.'
   if (!isValidOperacion(form.operacion)) errors.operacion = 'El número de operación solo puede contener letras y números.'
+  if (!form.entidad) errors.entidad = 'Selecciona la entidad financiera.'
+  if (!form.cuotas) errors.cuotas = 'Selecciona una opción de cuotas.'
+  if (!form.producto) errors.producto = 'Selecciona el tipo de producto.'
+  if (!form.especialidad) errors.especialidad = 'Selecciona la especialidad.'
   return errors
 }
 
@@ -295,8 +300,8 @@ function SubirVentas() {
             />
           </Field>
 
-          <Field label="Entidad financiera" required>
-            <select className="venta-form__select" value={form.entidad} onChange={set('entidad')} required>
+          <Field label="Entidad financiera" required error={fieldErrors.entidad}>
+            <select className={inputClass(fieldErrors.entidad)} value={form.entidad} onChange={set('entidad')} required>
               <option value="">Seleccionar...</option>
               {ENTIDADES_FINANCIERAS.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -304,8 +309,8 @@ function SubirVentas() {
             </select>
           </Field>
 
-          <Field label="Cuotas" required>
-            <select className="venta-form__select" value={form.cuotas} onChange={set('cuotas')} required>
+          <Field label="Cuotas" required error={fieldErrors.cuotas}>
+            <select className={inputClass(fieldErrors.cuotas)} value={form.cuotas} onChange={set('cuotas')} required>
               <option value="">Seleccionar...</option>
               {CUOTAS_OPCIONES.map((op) => {
                 const value = typeof op === 'string' ? op : op.value
@@ -340,8 +345,8 @@ function SubirVentas() {
 
           <h2 className="venta-form__section-title venta-form__section-title--spaced">Producto</h2>
 
-          <Field label="Tipo de producto" required>
-            <select className="venta-form__select" value={form.producto} onChange={set('producto')} required>
+          <Field label="Tipo de producto" required error={fieldErrors.producto}>
+            <select className={inputClass(fieldErrors.producto)} value={form.producto} onChange={set('producto')} required>
               <option value="">Seleccionar...</option>
               {TIPOS_PRODUCTO.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -349,8 +354,8 @@ function SubirVentas() {
             </select>
           </Field>
 
-          <Field label="Especialidad" required>
-            <select className="venta-form__select" value={form.especialidad} onChange={set('especialidad')} required>
+          <Field label="Especialidad" required error={fieldErrors.especialidad}>
+            <select className={inputClass(fieldErrors.especialidad)} value={form.especialidad} onChange={set('especialidad')} required>
               <option value="">Seleccionar...</option>
               {ESPECIALIDADES.map((op) => (
                 <option key={op} value={op}>{op}</option>

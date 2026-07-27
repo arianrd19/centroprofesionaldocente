@@ -36,7 +36,7 @@ function formatBytes(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
 }
 
-function Field({ label, required, full, children, hint }) {
+function Field({ label, required, full, children, hint, error }) {
   return (
     <div className={`venta-form__field${full ? ' venta-form__field--full' : ''}`}>
       <label className="venta-form__label">
@@ -44,9 +44,47 @@ function Field({ label, required, full, children, hint }) {
         {required && <span> *</span>}
       </label>
       {children}
-      {hint && <span className="venta-form__hint">{hint}</span>}
+      {hint && !error && <span className="venta-form__hint">{hint}</span>}
+      {error && <span className="venta-form__field-error" role="alert">{error}</span>}
     </div>
   )
+}
+
+function inputClass(hasError) {
+  return hasError ? 'venta-form__input venta-form__input--error' : 'venta-form__input'
+}
+
+function validateCertForm(form) {
+  const errors = {}
+  if (!form.cliente.trim()) errors.cliente = 'Ingresa el nombre completo del cliente.'
+  if (!/^\d{8}$/.test(form.dni)) errors.dni = 'El DNI debe tener exactamente 8 dígitos numéricos.'
+  if (!/^\d{9}$/.test(form.celular)) errors.celular = 'El celular debe tener exactamente 9 dígitos.'
+  const correo = form.correo.trim()
+  if (!correo.includes('@') || !/\.com/i.test(correo)) {
+    errors.correo = 'El correo debe incluir @ y .com (ej. nombre@gmail.com).'
+  }
+  if (!form.fecha_venta) errors.fecha_venta = 'Indica la fecha de la venta.'
+  if (!(/^\d+(\.\d{1,2})?$/.test(form.monto_total.trim()) && parseFloat(form.monto_total) > 0)) {
+    errors.monto_total = 'El monto debe ser un número mayor a 0.'
+  }
+  if (!(/^\d+(\.\d{1,2})?$/.test(form.monto_depositado.trim()) && parseFloat(form.monto_depositado) > 0)) {
+    errors.monto_depositado = 'El monto depositado debe ser un número mayor a 0.'
+  }
+  if (!form.operacion.trim()) errors.operacion = 'Ingresa el número de operación.'
+  if (!form.entidad) errors.entidad = 'Selecciona la entidad financiera.'
+  if (!form.cuotas) errors.cuotas = 'Selecciona una opción de cuotas.'
+  if (!form.producto) errors.producto = 'Selecciona el tipo de producto.'
+  if (!form.especialidad) errors.especialidad = 'Selecciona la especialidad.'
+  if (!form.dni_receptor.trim()) errors.dni_receptor = 'Ingresa el DNI del receptor del documento.'
+  if (!form.celular_receptor.trim()) errors.celular_receptor = 'Ingresa el celular del receptor del documento.'
+  if (!form.tipo_documento) errors.tipo_documento = 'Selecciona el tipo de documento.'
+  if (!form.fecha_documento) errors.fecha_documento = 'Selecciona la fecha de documento.'
+  if (!form.horas) errors.horas = 'Selecciona las horas pedagógicas.'
+  if (!form.tipo_envio) errors.tipo_envio = 'Selecciona el tipo de envío.'
+  if (!form.validado_por) errors.validado_por = 'Selecciona quién valida el documento.'
+  if (!form.codigo) errors.codigo = 'Selecciona el código (CON QR / SIN QR).'
+  if (!form.departamento.trim()) errors.departamento = 'Indica departamento / provincia / distrito.'
+  return errors
 }
 
 function FileUploadZone({ label, file, onChange, error, required = true }) {
@@ -239,6 +277,7 @@ function SubirCertificados() {
       }
       return next
     })
+    clearFieldError(key)
     setMessage('')
     setError('')
     if (key === 'especialidad') {
@@ -275,9 +314,13 @@ function SubirCertificados() {
     setDniClienteError('')
     setMencionError('')
 
+    const validationErrors = validateCertForm(form)
     if (!isClienteLookupReady(clienteLookup, form.dni)) {
-      setFieldErrors({ dni: 'Ingresa el DNI y espera la búsqueda (o pulsa Buscar).' })
-      setError('Revisa los datos del cliente antes de enviar.')
+      validationErrors.dni = 'Ingresa el DNI y espera la búsqueda (o pulsa Buscar).'
+    }
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors)
+      setError('Revisa los campos marcados antes de enviar.')
       setLoading(false)
       return
     }
@@ -382,11 +425,11 @@ function SubirCertificados() {
 
           <h2 className="venta-form__section-title venta-form__section-title--spaced">Montos y pago</h2>
 
-          <Field label="Fecha de la venta" required>
+          <Field label="Fecha de la venta" required error={fieldErrors.fecha_venta}>
             <div className="venta-form__date-row">
               <input
                 type="date"
-                className="venta-form__input"
+                className={inputClass(fieldErrors.fecha_venta)}
                 value={form.fecha_venta}
                 onChange={set('fecha_venta')}
                 required
@@ -401,20 +444,20 @@ function SubirCertificados() {
             </div>
           </Field>
 
-          <Field label="Monto de la venta (S/)" required>
-            <input className="venta-form__input" value={form.monto_total} onChange={set('monto_total')} required inputMode="decimal" placeholder="0.00" />
+          <Field label="Monto de la venta (S/)" required error={fieldErrors.monto_total}>
+            <input className={inputClass(fieldErrors.monto_total)} value={form.monto_total} onChange={set('monto_total')} required inputMode="decimal" placeholder="0.00" />
           </Field>
 
-          <Field label="Monto depositado (S/)" required>
-            <input className="venta-form__input" value={form.monto_depositado} onChange={set('monto_depositado')} required inputMode="decimal" placeholder="0.00" />
+          <Field label="Monto depositado (S/)" required error={fieldErrors.monto_depositado}>
+            <input className={inputClass(fieldErrors.monto_depositado)} value={form.monto_depositado} onChange={set('monto_depositado')} required inputMode="decimal" placeholder="0.00" />
           </Field>
 
-          <Field label="Número de operación" required>
-            <input className="venta-form__input" value={form.operacion} onChange={set('operacion')} required inputMode="numeric" />
+          <Field label="Número de operación" required error={fieldErrors.operacion}>
+            <input className={inputClass(fieldErrors.operacion)} value={form.operacion} onChange={set('operacion')} required inputMode="numeric" />
           </Field>
 
-          <Field label="Entidad financiera" required>
-            <select className="venta-form__select" value={form.entidad} onChange={set('entidad')} required>
+          <Field label="Entidad financiera" required error={fieldErrors.entidad}>
+            <select className={inputClass(fieldErrors.entidad)} value={form.entidad} onChange={set('entidad')} required>
               <option value="">Seleccionar...</option>
               {ENTIDADES_FINANCIERAS.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -422,8 +465,8 @@ function SubirCertificados() {
             </select>
           </Field>
 
-          <Field label="Cuotas" required>
-            <select className="venta-form__select" value={form.cuotas} onChange={set('cuotas')} required>
+          <Field label="Cuotas" required error={fieldErrors.cuotas}>
+            <select className={inputClass(fieldErrors.cuotas)} value={form.cuotas} onChange={set('cuotas')} required>
               <option value="">Seleccionar...</option>
               {CUOTAS_OPCIONES.map((op) => {
                 const value = typeof op === 'string' ? op : op.value
@@ -449,8 +492,8 @@ function SubirCertificados() {
             error={comprobanteError}
           />
 
-          <Field label="Tipo de producto" required>
-            <select className="venta-form__select" value={form.producto} onChange={set('producto')} required>
+          <Field label="Tipo de producto" required error={fieldErrors.producto}>
+            <select className={inputClass(fieldErrors.producto)} value={form.producto} onChange={set('producto')} required>
               <option value="">Seleccionar...</option>
               {TIPOS_PRODUCTO.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -458,8 +501,8 @@ function SubirCertificados() {
             </select>
           </Field>
 
-          <Field label="Especialidad" required>
-            <select className="venta-form__select" value={form.especialidad} onChange={set('especialidad')} required>
+          <Field label="Especialidad" required error={fieldErrors.especialidad}>
+            <select className={inputClass(fieldErrors.especialidad)} value={form.especialidad} onChange={set('especialidad')} required>
               <option value="">Seleccionar...</option>
               {ESPECIALIDADES.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -473,16 +516,16 @@ function SubirCertificados() {
 
           <h2 className="venta-form__section-title venta-form__section-title--spaced">Datos del documento</h2>
 
-          <Field label="DNI del receptor del documento" required>
-            <input className="venta-form__input" value={form.dni_receptor} onChange={set('dni_receptor')} required inputMode="numeric" maxLength={12} />
+          <Field label="DNI del receptor del documento" required error={fieldErrors.dni_receptor}>
+            <input className={inputClass(fieldErrors.dni_receptor)} value={form.dni_receptor} onChange={set('dni_receptor')} required inputMode="numeric" maxLength={12} />
           </Field>
 
-          <Field label="Celular del receptor del documento" required>
-            <input className="venta-form__input" value={form.celular_receptor} onChange={set('celular_receptor')} required inputMode="tel" />
+          <Field label="Celular del receptor del documento" required error={fieldErrors.celular_receptor}>
+            <input className={inputClass(fieldErrors.celular_receptor)} value={form.celular_receptor} onChange={set('celular_receptor')} required inputMode="tel" />
           </Field>
 
-          <Field label="Tipo de documento" required>
-            <select className="venta-form__select" value={form.tipo_documento} onChange={set('tipo_documento')} required>
+          <Field label="Tipo de documento" required error={fieldErrors.tipo_documento}>
+            <select className={inputClass(fieldErrors.tipo_documento)} value={form.tipo_documento} onChange={set('tipo_documento')} required>
               <option value="">Seleccionar...</option>
               {TIPOS_DOCUMENTO.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -490,8 +533,8 @@ function SubirCertificados() {
             </select>
           </Field>
 
-          <Field label="Fecha de documento" required>
-            <select className="venta-form__select" value={form.fecha_documento} onChange={set('fecha_documento')} required>
+          <Field label="Fecha de documento" required error={fieldErrors.fecha_documento}>
+            <select className={inputClass(fieldErrors.fecha_documento)} value={form.fecha_documento} onChange={set('fecha_documento')} required>
               <option value="">Seleccionar...</option>
               {FECHAS_DOCUMENTO.map((op) => {
                 const value = typeof op === 'string' ? op : op.value
@@ -507,8 +550,8 @@ function SubirCertificados() {
             </Field>
           )}
 
-          <Field label="Horas pedagógicas" required>
-            <select className="venta-form__select" value={form.horas} onChange={set('horas')} required>
+          <Field label="Horas pedagógicas" required error={fieldErrors.horas}>
+            <select className={inputClass(fieldErrors.horas)} value={form.horas} onChange={set('horas')} required>
               <option value="">Seleccionar...</option>
               {HORAS_PEDAGOGICAS.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -516,8 +559,8 @@ function SubirCertificados() {
             </select>
           </Field>
 
-          <Field label="Tipo de envío" required>
-            <select className="venta-form__select" value={form.tipo_envio} onChange={set('tipo_envio')} required>
+          <Field label="Tipo de envío" required error={fieldErrors.tipo_envio}>
+            <select className={inputClass(fieldErrors.tipo_envio)} value={form.tipo_envio} onChange={set('tipo_envio')} required>
               <option value="">Seleccionar...</option>
               {TIPOS_ENVIO.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -525,8 +568,8 @@ function SubirCertificados() {
             </select>
           </Field>
 
-          <Field label="Validado por" required>
-            <select className="venta-form__select" value={form.validado_por} onChange={set('validado_por')} required>
+          <Field label="Validado por" required error={fieldErrors.validado_por}>
+            <select className={inputClass(fieldErrors.validado_por)} value={form.validado_por} onChange={set('validado_por')} required>
               <option value="">Seleccionar...</option>
               {VALIDADO_POR_OPCIONES.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -534,8 +577,8 @@ function SubirCertificados() {
             </select>
           </Field>
 
-          <Field label="Código" required>
-            <select className="venta-form__select" value={form.codigo} onChange={set('codigo')} required>
+          <Field label="Código" required error={fieldErrors.codigo}>
+            <select className={inputClass(fieldErrors.codigo)} value={form.codigo} onChange={set('codigo')} required>
               <option value="">Seleccionar...</option>
               {CODIGO_OPCIONES.map((op) => (
                 <option key={op} value={op}>{op}</option>
@@ -560,8 +603,8 @@ function SubirCertificados() {
             <input className="venta-form__input" value={form.otras_menciones} onChange={set('otras_menciones')} placeholder="Opcional" />
           </Field>
 
-          <Field label="Departamento / Provincia / Distrito" required full>
-            <input className="venta-form__input" value={form.departamento} onChange={set('departamento')} required placeholder="Ej. Lima / Lima / Miraflores" />
+          <Field label="Departamento / Provincia / Distrito" required full error={fieldErrors.departamento}>
+            <input className={inputClass(fieldErrors.departamento)} value={form.departamento} onChange={set('departamento')} required placeholder="Ej. Lima / Lima / Miraflores" />
           </Field>
 
           <FileUploadZone

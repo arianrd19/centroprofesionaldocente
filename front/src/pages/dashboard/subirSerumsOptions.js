@@ -72,6 +72,7 @@ function isValidOperacion(operacion) {
 
 export function validateSerumsForm(form) {
   const errors = {}
+  if (!form.cliente.trim()) errors.cliente = 'Ingresa el nombre completo del cliente.'
   if (!isValidDni(form.dni)) errors.dni = 'El DNI debe tener exactamente 8 dígitos numéricos.'
   if (!isValidCelular(form.celular)) errors.celular = 'El celular debe tener exactamente 9 dígitos.'
   if (!isValidCorreo(form.correo)) errors.correo = 'El correo debe incluir @ y .com (ej. nombre@gmail.com).'
@@ -79,6 +80,8 @@ export function validateSerumsForm(form) {
   if (!isValidMonto(form.monto_total)) errors.monto_total = 'El monto total debe ser un número mayor a 0.'
   if (!isValidMonto(form.monto_depositado)) errors.monto_depositado = 'El monto depositado debe ser un número mayor a 0.'
   if (!isValidOperacion(form.operacion)) errors.operacion = 'El número de operación solo puede contener letras y números.'
+  if (!form.entidad) errors.entidad = 'Selecciona la entidad financiera.'
+  if (!form.cuotas) errors.cuotas = 'Selecciona una opción de cuotas.'
   if (!form.especialidad) errors.especialidad = 'Selecciona una especialidad.'
   if (form.especialidad === ESPECIALIDAD_TM && !form.sub_especialidad) {
     errors.sub_especialidad = 'Selecciona la sub especialidad de tecnología médica.'
