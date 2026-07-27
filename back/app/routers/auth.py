@@ -20,6 +20,7 @@ router = APIRouter()
 def _set_session_cookies(response: Response, access_token: str, csrf_token: str, max_age: int) -> None:
     is_production = os.getenv('ENVIRONMENT', 'development') == 'production'
     cookie_samesite = "none" if is_production else "lax"
+    cookie_domain = settings.COOKIE_DOMAIN or None
     response.set_cookie(
         key="access_token",
         value=access_token,
@@ -28,6 +29,7 @@ def _set_session_cookies(response: Response, access_token: str, csrf_token: str,
         samesite=cookie_samesite,
         max_age=max_age,
         path="/",
+        domain=cookie_domain,
     )
     response.set_cookie(
         key="csrf_token",
@@ -37,6 +39,7 @@ def _set_session_cookies(response: Response, access_token: str, csrf_token: str,
         samesite=cookie_samesite,
         max_age=max_age,
         path="/",
+        domain=cookie_domain,
     )
 
 
@@ -78,12 +81,14 @@ async def login(request: Request, response: Response, form_data: OAuth2PasswordR
 async def logout(response: Response):
     is_production = os.getenv('ENVIRONMENT', 'development') == 'production'
     cookie_samesite = "none" if is_production else "lax"
+    cookie_domain = settings.COOKIE_DOMAIN or None
     for cookie_name in ("access_token", "csrf_token"):
         response.delete_cookie(
             key=cookie_name,
             path="/",
             secure=is_production,
             samesite=cookie_samesite,
+            domain=cookie_domain,
         )
     return {"message": "Sesion cerrada"}
 

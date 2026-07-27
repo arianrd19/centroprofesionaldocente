@@ -122,6 +122,11 @@ class Config:
     BASE_URL = _env("BASE_URL", "https://centroprofesionaldocente.com")
     FRONTEND_URL = _env("FRONTEND_URL", "http://localhost:3000")
     DASHBOARD_URL = _env("DASHBOARD_URL", "https://dashboard.centroprofesionaldocente.com")
+    # Dominio compartido para que la cookie csrf_token (no-httpOnly) sea legible
+    # por JS en subdominios del front (ej. dashboard.centroprofesionaldocente.com)
+    # cuando el backend vive en un subdominio propio (ej. api.centroprofesionaldocente.com).
+    # Vacío en dev (cookie host-only para localhost).
+    COOKIE_DOMAIN = _env("COOKIE_DOMAIN", "")
     ALGORITHM = _env("ALGORITHM", "HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES = _env_int("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
 
