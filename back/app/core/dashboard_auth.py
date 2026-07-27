@@ -123,6 +123,7 @@ def find_user_in_sheets(identifier: str) -> Optional[Dict[str, Any]]:
             worksheet_name=CREDENCIALES_WS,
         )
     except Exception:
+        _log.exception("No se pudo leer la hoja CREDENCIALES")
         return None
 
     id_lower = identifier.lower()
@@ -241,6 +242,7 @@ def authenticate_from_sheets(identifier: str, password: str) -> Optional[Dict[st
             "comision": session_user.get("comision"),
         }
     except Exception:
+        _log.exception("Fallo inesperado autenticando %s", identifier)
         return None
 
 

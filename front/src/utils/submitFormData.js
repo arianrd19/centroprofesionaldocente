@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { getCsrfToken, getUser } from './auth'
+import { getApiUrl } from './api'
 
 /**
- * Subidas multipart SIEMPRE por /api (proxy Vite → backend).
- * Same-origin: el navegador puede enviar archivos grandes sin CORS.
- * Llamar directo a :8000 provoca OPTIONS 200 pero el POST nunca llega.
+ * Subidas multipart: en dev van por /api (proxy Vite → backend, same-origin,
+ * evita CORS con archivos grandes). En producción, front y back están en
+ * dominios distintos, así que se usa VITE_API_URL (misma resolución que api.js).
  */
 export async function submitFormData(path, formData, { timeout = 300000 } = {}) {
   const cleanPath = path.startsWith('/') ? path.slice(1) : path
@@ -16,7 +17,7 @@ export async function submitFormData(path, formData, { timeout = 300000 } = {}) 
   }
 
   try {
-    const res = await axios.post(`/api/${cleanPath}`, formData, {
+    const res = await axios.post(getApiUrl(cleanPath), formData, {
       timeout,
       withCredentials: true,
       headers: {
