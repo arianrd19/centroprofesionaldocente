@@ -1,3 +1,4 @@
+import logging
 import os
 import secrets
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
@@ -10,6 +11,8 @@ from app.core.dashboard_auth import load_session_user_from_email
 from app.core.config import settings
 from app.core.security import get_admin_user
 from app.core.limiter import limiter
+
+_log = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -41,6 +44,7 @@ def _set_session_cookies(response: Response, access_token: str, csrf_token: str,
 @limiter.limit(settings.LOGIN_RATE_LIMIT)
 async def login(request: Request, response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
     """Endpoint de login"""
+    _log.warning("LOGIN intento username=%r origin=%r", form_data.username, request.headers.get("origin"))
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
