@@ -172,6 +172,12 @@ export default function ClienteLookupSection({
 
   return (
     <div className={`venta-form__cliente-card ${status.className}`}>
+      {lookup === 'searching' && (
+        <div className="venta-form__cliente-overlay" role="status" aria-live="polite">
+          <div className="venta-form__cliente-overlay-spinner" aria-hidden="true" />
+          <p className="venta-form__cliente-overlay-text">Buscando cliente en CLIENTES...</p>
+        </div>
+      )}
       <div className="venta-form__cliente-status" role="status">
         <span className="venta-form__cliente-status-icon" aria-hidden>{status.icon}</span>
         <div>
@@ -194,6 +200,7 @@ export default function ClienteLookupSection({
               value={form.dni}
               onChange={handleDniChange}
               required
+              disabled={buscando}
               inputMode="numeric"
               maxLength={8}
               placeholder="12345678"
