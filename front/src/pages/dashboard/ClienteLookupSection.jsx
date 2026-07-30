@@ -80,12 +80,23 @@ export default function ClienteLookupSection({
         clearClienteFields()
         setLookup('not_found')
         onClearFieldErrors?.(['dni'])
+        buscarNombreEnReniec(dniVal)
       } else {
         clearClienteFields()
         setLookup('error')
       }
     } finally {
       setBuscando(false)
+    }
+  }
+
+  /** Cliente nuevo (no está en CLIENTES): intenta autocompletar el nombre desde RENIEC. */
+  const buscarNombreEnReniec = async (dniVal) => {
+    try {
+      const res = await api.get(`dashboard/dni-externo/${dniVal}`)
+      setForm((prev) => (prev.dni === dniVal ? { ...prev, cliente: res.data.nombreCompleto || prev.cliente } : prev))
+    } catch {
+      // Sin datos en RENIEC o token no configurado: se completa el nombre a mano.
     }
   }
 

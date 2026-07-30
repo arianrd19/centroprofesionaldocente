@@ -10,6 +10,7 @@ from app.core.security import get_admin_user, get_current_user
 from app.core.google_sheets import sheets_service
 from app.core.config import settings
 from app.core.limiter import limiter
+from app.core.dni_lookup import consultar_dni_externo
 from app.services import dashboard_service
 from app.services.venta_upload import (
     save_certificado_comprobante,
@@ -107,6 +108,31 @@ async def buscar_cliente_por_dni(
     except Exception as exc:
         _log.error("Error buscando cliente %s: %s", dni, exc)
         raise HTTPException(status_code=500, detail="Error al buscar el cliente.")
+
+
+@router.get("/dni-externo/{numero}")
+async def buscar_dni_externo(
+    numero: str,
+    user: dict = Depends(get_dashboard_user),
+):
+    """Consulta RENIEC (dniruc.apisperu.com) para autocompletar el nombre de un
+    cliente nuevo que no está en la hoja CLIENTES."""
+    numero = numero.strip()
+    if not (numero.isdigit() and len(numero) == 8):
+        raise HTTPException(status_code=400, detail="DNI inválido, debe tener 8 dígitos.")
+
+    data = await consultar_dni_externo(numero)
+    if not data:
+        raise HTTPException(status_code=404, detail=f"DNI {numero} no encontrado en RENIEC.")
+
+    nombre_completo = " ".join(
+        parte for parte in (
+            data.get("nombres", "").strip(),
+            data.get("apellidoPaterno", "").strip(),
+            data.get("apellidoMaterno", "").strip(),
+        ) if parte
+    )
+    return {"dni": data.get("dni", numero), "nombreCompleto": nombre_completo}
 
 
 @router.post("/ventas/subir")
