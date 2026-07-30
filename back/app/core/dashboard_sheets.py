@@ -286,7 +286,7 @@ class GoogleSheetService:
         if not ws:
             return False
         try:
-            ws.append_row(data, value_input_option="USER_ENTERED")
+            ws.append_row(data, value_input_option="USER_ENTERED", insert_data_option="INSERT_ROWS")
             self.invalidate_records_cache(book_name, worksheet_name)
             return True
         except Exception as e:
@@ -319,7 +319,7 @@ class GoogleSheetService:
                 if val is None:
                     val = ""
                 row.append(val)
-            ws.append_row(row, value_input_option="USER_ENTERED")
+            ws.append_row(row, value_input_option="USER_ENTERED", insert_data_option="INSERT_ROWS")
             self.invalidate_records_cache(book_name, worksheet_name)
             return True
         except Exception as e:

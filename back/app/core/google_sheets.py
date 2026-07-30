@@ -221,7 +221,7 @@ class GoogleSheetsService:
                     row.append(str(value) if value else "")
                 
                 
-                self.sheet.append_row(row)
+                self.sheet.append_row(row, insert_data_option="INSERT_ROWS")
             except Exception as e_main:
                 import traceback
                 traceback.print_exc()
@@ -361,7 +361,7 @@ class GoogleSheetsService:
                     row_qr.append(str(value) if value else "")
                 
                 # Agregar fila a CERTIFICADOS QR
-                worksheet_qr.append_row(row_qr)
+                worksheet_qr.append_row(row_qr, insert_data_option="INSERT_ROWS")
             except Exception as e_qr:
                 pass
                 # Si falla guardar en CERTIFICADOS QR, mostrar error detallado
@@ -820,8 +820,8 @@ class GoogleSheetsService:
                 row.append(str(value) if value else "")
             
             # Agregar fila
-            worksheet.append_row(row)
-            
+            worksheet.append_row(row, insert_data_option="INSERT_ROWS")
+
             # Invalidar caché de clientes
             self._cache_clientes = None
             self._cache_clientes_timestamp = None
