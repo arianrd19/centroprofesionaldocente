@@ -45,6 +45,10 @@ export default function ClienteLookupSection({
   const isLocked = lookup === 'found'
   const canEditManual = lookup === 'not_found' || lookup === 'error'
   const fieldsDisabled = !isLocked && !canEditManual
+  // Si el cliente ya está en CLIENTES pero le falta nombre o celular, se deja
+  // editable para que el asesor lo complete (y quede guardado al enviar).
+  const nombreLocked = isLocked && !!form.cliente
+  const celularLocked = isLocked && !!form.celular
 
   useEffect(() => () => {
     if (searchRef.current) clearTimeout(searchRef.current)
@@ -213,14 +217,14 @@ export default function ClienteLookupSection({
           hint={fieldsDisabled ? 'Primero busca el DNI' : undefined}
         >
           <input
-            className={inputClass(fieldErrors.cliente, isLocked)}
+            className={inputClass(fieldErrors.cliente, nombreLocked)}
             value={form.cliente}
             onChange={setField('cliente')}
             required
             autoComplete="name"
-            readOnly={isLocked}
+            readOnly={nombreLocked}
             disabled={fieldsDisabled}
-            placeholder={canEditManual ? 'Nombre y apellidos' : ''}
+            placeholder={nombreLocked ? '' : 'Nombre y apellidos'}
           />
         </Field>
 
@@ -231,15 +235,15 @@ export default function ClienteLookupSection({
           error={fieldErrors.celular}
         >
           <input
-            className={inputClass(fieldErrors.celular, isLocked)}
+            className={inputClass(fieldErrors.celular, celularLocked)}
             value={form.celular}
             onChange={setCelular}
             required
             inputMode="numeric"
             maxLength={9}
-            readOnly={isLocked}
+            readOnly={celularLocked}
             disabled={fieldsDisabled}
-            placeholder={canEditManual ? '987654321' : ''}
+            placeholder={celularLocked ? '' : '987654321'}
           />
         </Field>
 

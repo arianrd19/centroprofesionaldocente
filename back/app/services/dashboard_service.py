@@ -691,24 +691,49 @@ def get_menciones(
 
 
 def ensure_cliente_in_sheet(payload: Dict[str, Any]) -> None:
-    """Si el DNI no existe en CLIENTES, lo registra con los datos del formulario."""
+    """Si el DNI no existe en CLIENTES, lo registra con los datos del formulario.
+    Si ya existe pero le falta nombre/celular/correo, completa solo lo que
+    esté vacío con lo que llenó el asesor (no pisa datos ya cargados)."""
     from app.core.google_sheets import sheets_service
 
     dni = (payload.get("dni") or "").strip()
     if not dni:
         return
     try:
-        if sheets_service.get_cliente_by_dni(dni):
+        existing = sheets_service.get_cliente_by_dni(dni)
+        if not existing:
+            sheets_service.create_cliente({
+                "DNI DEL CLIENTE": dni,
+                "NOMBRE COMPLETO DEL CLIENTE": (payload.get("cliente") or "").strip(),
+                "CELULAR DEL CLIENTE": (payload.get("celular") or "").strip(),
+                "CORREO DEL CLIENTE": (payload.get("correo") or "").strip(),
+            })
+            _log.info("Cliente nuevo registrado en CLIENTES: DNI %s", dni)
             return
-        sheets_service.create_cliente({
-            "DNI DEL CLIENTE": dni,
-            "NOMBRE COMPLETO DEL CLIENTE": (payload.get("cliente") or "").strip(),
-            "CELULAR DEL CLIENTE": (payload.get("celular") or "").strip(),
-            "CORREO DEL CLIENTE": (payload.get("correo") or "").strip(),
-        })
-        _log.info("Cliente nuevo registrado en CLIENTES: DNI %s", dni)
+
+        nombre_actual = str(
+            existing.get("NOMBRE COMPLETO DEL CLIENTE", "") or existing.get("NOMBRES", "") or ""
+        ).strip()
+        celular_actual = str(
+            existing.get("CELULAR DEL CLIENTE", "") or existing.get("TELEFONO", "") or ""
+        ).strip()
+        correo_actual = str(
+            existing.get("CORREO DEL CLIENTE", "") or existing.get("EMAIL", "") or ""
+        ).strip()
+
+        faltantes = {}
+        if not nombre_actual and (payload.get("cliente") or "").strip():
+            faltantes["NOMBRE COMPLETO DEL CLIENTE"] = payload["cliente"].strip()
+        if not celular_actual and (payload.get("celular") or "").strip():
+            faltantes["CELULAR DEL CLIENTE"] = payload["celular"].strip()
+        if not correo_actual and (payload.get("correo") or "").strip():
+            faltantes["CORREO DEL CLIENTE"] = payload["correo"].strip()
+
+        if faltantes:
+            sheets_service.update_cliente(dni, faltantes)
+            _log.info("Cliente %s completado en CLIENTES con: %s", dni, list(faltantes.keys()))
     except Exception as exc:
-        _log.warning("No se pudo crear cliente %s en CLIENTES: %s", dni, exc)
+        _log.warning("No se pudo crear/actualizar cliente %s en CLIENTES: %s", dni, exc)
 
 
 def submit_venta(
