@@ -254,7 +254,7 @@ export default function ClienteLookupSection({
           error={fieldErrors.correo}
         >
           <input
-            type="email"
+            type="text"
             className={inputClass(fieldErrors.correo, false)}
             value={form.correo}
             onChange={setField('correo')}

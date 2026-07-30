@@ -790,9 +790,13 @@ class GoogleSheetsService:
             for header in headers:
                 # Buscar el valor en diferentes formatos
                 if header == 'NOMBRE COMPLETO DEL CLIENTE':
-                    nombres = data.get('nombres', '') or data.get('NOMBRES', '')
-                    apellidos = data.get('apellidos', '') or data.get('APELLIDOS', '')
-                    mapped_data[header] = f"{nombres} {apellidos}".strip()
+                    nombre_completo = data.get('NOMBRE COMPLETO DEL CLIENTE') or data.get('nombreCompleto')
+                    if nombre_completo:
+                        mapped_data[header] = str(nombre_completo).strip()
+                    else:
+                        nombres = data.get('nombres', '') or data.get('NOMBRES', '')
+                        apellidos = data.get('apellidos', '') or data.get('APELLIDOS', '')
+                        mapped_data[header] = f"{nombres} {apellidos}".strip()
                 elif header == 'DNI DEL CLIENTE':
                     mapped_data[header] = data.get('DNI DEL CLIENTE') or data.get('DNI') or data.get('dni') or ''
                 elif header == 'CELULAR DEL CLIENTE':
