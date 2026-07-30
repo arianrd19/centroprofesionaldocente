@@ -3,6 +3,7 @@ import logging
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlencode
+from zoneinfo import ZoneInfo
 
 from app.core.config import settings
 from app.core.dashboard_auth import (
@@ -16,6 +17,18 @@ from app.core.dashboard_auth import _norm_commission_to_float
 from app.core.dashboard_sheets import gs_service
 
 _log = logging.getLogger(__name__)
+
+LIMA_TZ = ZoneInfo("America/Lima")
+
+
+def _now_lima() -> datetime:
+    """Hora actual en Lima. El servidor (Render) corre en UTC; sin esto la
+    'Marca temporal' de ventas/serums/certificados queda 5 horas adelantada."""
+    return datetime.now(LIMA_TZ)
+
+
+def _today_lima() -> date:
+    return _now_lima().date()
 
 
 MESES = {
@@ -113,7 +126,7 @@ def _bounds_from_monthly_ws(tab_title: str) -> tuple[date, date, str]:
         month_label = f"{MESES_ES[m - 1].capitalize()} {y}"
         return d_start, d_end, month_label
     except Exception:
-        today = date.today()
+        today = _today_lima()
         d_start, d_end = _month_bounds(today.year, today.month)
         return d_start, d_end, _formatear_mes_anio(today)
 
@@ -124,7 +137,7 @@ def _bounds_from_tab(tab_title: str) -> tuple[date, date, str]:
 
 
 def _month_range_today() -> tuple[date, date, date]:
-    today = date.today()
+    today = _today_lima()
     first = today.replace(day=1)
     if today.month == 12:
         next_first = date(today.year + 1, 1, 1)
@@ -409,7 +422,7 @@ def get_home_data(user_email: str) -> Dict[str, Any]:
         {
             "user": user,
             "total_registros": total_registros,
-            "now": datetime.now(),
+            "now": _now_lima(),
             "leaderboard": leaderboard,
             "warning": "Libro 'datos' no configurado, usando otra fuente."
             if error_fuente == "datos"
@@ -771,7 +784,7 @@ def submit_venta(
     if cuotas == "__OTRO__":
         cuotas = (payload.get("cuotas_otro") or "").strip()
 
-    now = datetime.now()
+    now = _now_lima()
     row = {
         COL_TIMESTAMP: now.strftime("%d/%m/%Y %H:%M:%S"),
         COL_PERSONAL: personal,
@@ -844,7 +857,7 @@ def submit_serums(
     if not sub_especialidad:
         sub_especialidad = "NO APLICA"
 
-    now = datetime.now()
+    now = _now_lima()
     row = {
         COL_TIMESTAMP: now.strftime("%d/%m/%Y %H:%M:%S"),
         COL_PERSONAL: personal,
@@ -920,7 +933,7 @@ def submit_certificado(
     monto = (payload.get("monto_total") or "").strip()
     tipo_envio = (payload.get("tipo_envio") or "").strip()
 
-    now = datetime.now()
+    now = _now_lima()
     row = {
         COL_TIMESTAMP: now.strftime("%d/%m/%Y %H:%M:%S"),
         COL_PERSONAL: personal,
