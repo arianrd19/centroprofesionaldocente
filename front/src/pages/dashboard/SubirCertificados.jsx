@@ -59,9 +59,8 @@ function validateCertForm(form) {
   if (!form.cliente.trim()) errors.cliente = 'Ingresa el nombre completo del cliente.'
   if (!/^\d{8}$/.test(form.dni)) errors.dni = 'El DNI debe tener exactamente 8 dígitos numéricos.'
   if (!/^\d{9}$/.test(form.celular)) errors.celular = 'El celular debe tener exactamente 9 dígitos.'
-  const correo = form.correo.trim()
-  if (!correo.includes('@') || !/\.com/i.test(correo)) {
-    errors.correo = 'El correo debe incluir @ y .com (ej. nombre@gmail.com).'
+  if (!form.correo.trim().includes('@')) {
+    errors.correo = 'El correo debe incluir @ (ej. nombre@gmail.com).'
   }
   if (!form.fecha_venta) errors.fecha_venta = 'Indica la fecha de la venta.'
   if (!(/^\d+(\.\d{1,2})?$/.test(form.monto_total.trim()) && parseFloat(form.monto_total) > 0)) {
@@ -408,6 +407,13 @@ function SubirCertificados() {
       </header>
 
       <form className="venta-form__card" onSubmit={handleSubmit} noValidate>
+        {loading && (
+          <div className="venta-form__overlay" role="status" aria-live="polite">
+            <div className="venta-form__overlay-spinner" aria-hidden="true" />
+            <p className="venta-form__overlay-text">Subiendo archivos y guardando registro...</p>
+          </div>
+        )}
+        <fieldset className="venta-form__fieldset" disabled={loading}>
         <div className="venta-form__grid">
           <h2 className="venta-form__section-title">Datos del cliente</h2>
 
@@ -626,6 +632,7 @@ function SubirCertificados() {
             Limpiar
           </button>
         </div>
+        </fieldset>
 
         {message && <div className="venta-form__success" role="status">{message}</div>}
         {error && <div className="venta-form__error" role="alert">{error}</div>}

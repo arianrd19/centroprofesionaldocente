@@ -56,8 +56,7 @@ function isValidCelular(celular) {
 }
 
 function isValidCorreo(correo) {
-  const c = correo.trim()
-  return c.includes('@') && /\.com/i.test(c)
+  return correo.trim().includes('@')
 }
 
 function isValidMonto(monto) {
@@ -75,7 +74,7 @@ export function validateSerumsForm(form) {
   if (!form.cliente.trim()) errors.cliente = 'Ingresa el nombre completo del cliente.'
   if (!isValidDni(form.dni)) errors.dni = 'El DNI debe tener exactamente 8 dígitos numéricos.'
   if (!isValidCelular(form.celular)) errors.celular = 'El celular debe tener exactamente 9 dígitos.'
-  if (!isValidCorreo(form.correo)) errors.correo = 'El correo debe incluir @ y .com (ej. nombre@gmail.com).'
+  if (!isValidCorreo(form.correo)) errors.correo = 'El correo debe incluir @ (ej. nombre@gmail.com).'
   if (!form.fecha_venta) errors.fecha_venta = 'Indica la fecha de la venta.'
   if (!isValidMonto(form.monto_total)) errors.monto_total = 'El monto total debe ser un número mayor a 0.'
   if (!isValidMonto(form.monto_depositado)) errors.monto_depositado = 'El monto depositado debe ser un número mayor a 0.'

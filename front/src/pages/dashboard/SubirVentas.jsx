@@ -47,8 +47,7 @@ function isValidCelular(celular) {
 }
 
 function isValidCorreo(correo) {
-  const c = correo.trim()
-  return c.includes('@') && /\.com/i.test(c)
+  return correo.trim().includes('@')
 }
 
 function isValidMonto(monto) {
@@ -66,7 +65,7 @@ function validateVentaForm(form) {
   if (!form.cliente.trim()) errors.cliente = 'Ingresa el nombre completo del cliente.'
   if (!isValidDni(form.dni)) errors.dni = 'El DNI debe tener exactamente 8 dígitos numéricos.'
   if (!isValidCelular(form.celular)) errors.celular = 'El celular debe tener exactamente 9 dígitos.'
-  if (!isValidCorreo(form.correo)) errors.correo = 'El correo debe incluir @ y .com (ej. nombre@gmail.com).'
+  if (!isValidCorreo(form.correo)) errors.correo = 'El correo debe incluir @ (ej. nombre@gmail.com).'
   if (!form.fecha_venta) errors.fecha_venta = 'Indica la fecha de la venta.'
   if (!isValidMonto(form.monto_total)) errors.monto_total = 'El monto total debe ser un número mayor a 0 (ej. 150 o 150.50).'
   if (!isValidMonto(form.monto_depositado)) errors.monto_depositado = 'El monto depositado debe ser un número mayor a 0.'
@@ -227,6 +226,13 @@ function SubirVentas() {
       </header>
 
       <form className="venta-form__card" onSubmit={handleSubmit} noValidate>
+        {loading && (
+          <div className="venta-form__overlay" role="status" aria-live="polite">
+            <div className="venta-form__overlay-spinner" aria-hidden="true" />
+            <p className="venta-form__overlay-text">Subiendo tu pedido...</p>
+          </div>
+        )}
+        <fieldset className="venta-form__fieldset" disabled={loading}>
         <div className="venta-form__grid">
           <h2 className="venta-form__section-title">Datos del cliente</h2>
 
@@ -381,6 +387,7 @@ function SubirVentas() {
             Limpiar
           </button>
         </div>
+        </fieldset>
 
         {message && <div className="venta-form__success" role="status">{message}</div>}
         {error && <div className="venta-form__error" role="alert">{error}</div>}

@@ -202,6 +202,13 @@ function SubirVentasSerums() {
       </header>
 
       <form className="venta-form__card" onSubmit={handleSubmit} noValidate>
+        {loading && (
+          <div className="venta-form__overlay" role="status" aria-live="polite">
+            <div className="venta-form__overlay-spinner" aria-hidden="true" />
+            <p className="venta-form__overlay-text">Subiendo tu pedido...</p>
+          </div>
+        )}
+        <fieldset className="venta-form__fieldset" disabled={loading}>
         <div className="venta-form__grid">
           <h2 className="venta-form__section-title">Datos del cliente</h2>
 
@@ -373,6 +380,7 @@ function SubirVentasSerums() {
             Limpiar
           </button>
         </div>
+        </fieldset>
 
         {message && <div className="venta-form__success" role="status">{message}</div>}
         {error && <div className="venta-form__error" role="alert">{error}</div>}

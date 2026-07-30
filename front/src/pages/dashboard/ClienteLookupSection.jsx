@@ -25,7 +25,7 @@ function inputClass(hasError, locked) {
 
 /**
  * Bloque DNI + datos del cliente con búsqueda en hoja CLIENTES.
- * - Encontrado: autocompleta y bloquea nombre/celular; correo siempre editable (no está en CLIENTES).
+ * - Encontrado: autocompleta y bloquea nombre/celular; correo se precarga pero queda editable.
  * - No encontrado: habilita edición manual (se crea en CLIENTES al guardar la venta/certificado).
  */
 export default function ClienteLookupSection({
@@ -71,7 +71,7 @@ export default function ClienteLookupSection({
         cliente: mapped.cliente,
         dni: mapped.dni,
         celular: mapped.celular,
-        correo: '',
+        correo: mapped.correo,
       }))
       setLookup('found')
       onClearFieldErrors?.(['cliente', 'celular', 'correo', 'dni'])
@@ -140,7 +140,7 @@ export default function ClienteLookupSection({
       className: 'venta-form__cliente-card--found',
       icon: '✓',
       title: 'Cliente registrado',
-      text: 'Nombre y celular cargados desde CLIENTES. Completa el correo antes de enviar.',
+      text: 'Datos cargados desde CLIENTES. Revisa el correo antes de enviar.',
     },
     not_found: {
       className: 'venta-form__cliente-card--new',
@@ -246,11 +246,7 @@ export default function ClienteLookupSection({
         <Field
           label="Correo del cliente"
           required
-          hint={
-            fieldsDisabled
-              ? 'Primero busca el DNI'
-              : 'Debe incluir @ y .com — no está en la hoja CLIENTES'
-          }
+          hint={fieldsDisabled ? 'Primero busca el DNI' : 'Debe incluir @'}
           error={fieldErrors.correo}
         >
           <input
