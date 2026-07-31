@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import ExternalRedirect from './components/ExternalRedirect'
 import DashboardLayout, { DashboardProtectedRoute } from './components/dashboard/DashboardLayout'
 import DashboardIndex from './pages/dashboard/DashboardIndex'
+import DashboardAdminHome from './pages/dashboard/DashboardAdminHome'
 import MiDashboard from './pages/dashboard/MiDashboard'
 import Cobranza from './pages/dashboard/Cobranza'
 import VentasConsulta from './pages/dashboard/VentasConsulta'
@@ -52,6 +53,17 @@ function DashboardRoutes() {
         <Route path="subir-certificados" element={<SubirCertificados />} />
         <Route path="menciones" element={<Menciones />} />
         <Route path="admin" element={<DashboardAdmin />} />
+      </Route>
+      {/* Vista exclusiva de admin, separada de /dashboard para no saturar esa vista */}
+      <Route
+        path="dashboard-admin/*"
+        element={
+          <DashboardProtectedRoute>
+            <DashboardLayout />
+          </DashboardProtectedRoute>
+        }
+      >
+        <Route index element={<DashboardAdminHome />} />
       </Route>
     </>
   )
@@ -113,6 +125,7 @@ function App() {
               <Route path="login" element={<ExternalRedirect baseUrl={DASHBOARD_URL} />} />
               <Route path="panel/*" element={<ExternalRedirect baseUrl={DASHBOARD_URL} />} />
               <Route path="dashboard/*" element={<ExternalRedirect baseUrl={DASHBOARD_URL} />} />
+              <Route path="dashboard-admin/*" element={<ExternalRedirect baseUrl={DASHBOARD_URL} />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </>
           )}

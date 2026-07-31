@@ -513,6 +513,78 @@ def get_admin_home_data() -> Dict[str, Any]:
     )
 
 
+def _resolve_periodo(anio: Optional[int], mes: Optional[int], nofilter: bool):
+    tab_title = settings.SHEETS["cursos"]["worksheets"]["registro"]
+    if nofilter:
+        return date(1900, 1, 1), date(2999, 12, 31), "Todos"
+    if anio and mes:
+        try:
+            d_start, d_end = _month_bounds(int(anio), int(mes))
+            return d_start, d_end, f"{MESES_ES[int(mes) - 1].capitalize()} {int(anio)}"
+        except Exception:
+            pass
+    return _bounds_from_monthly_ws(tab_title)
+
+
+def get_admin_mi_dashboard_data(
+    anio: Optional[int],
+    mes: Optional[int],
+    nofilter: bool,
+) -> Dict[str, Any]:
+    """Igual que get_mi_dashboard_data pero sin filtrar por asesor (solo admin):
+    ventas de cursos/certificados/serums de TODOS los asesores en el periodo."""
+    d_start, d_end, month_label = _resolve_periodo(anio, mes, nofilter)
+    cfg = _sheets_config()
+
+    cursos_stats = gs_service.get_all_sales(d_start, d_end, cfg)
+    cert_stats = gs_service.get_all_certificates(d_start, d_end, cfg)
+    serums_stats = gs_service.get_all_serums(d_start, d_end, cfg)
+
+    count_cursos = cursos_stats.get("count", 0)
+    total_cursos = cursos_stats.get("total_monto", 0.0)
+    count_certificados = cert_stats.get("count", 0)
+    total_certificados = cert_stats.get(
+        "total_monto",
+        sum(c.get("monto_depositado", 0) for c in cert_stats.get("certificados", [])),
+    )
+    count_serums = serums_stats.get("count", 0)
+    total_serums = serums_stats.get("total_monto", 0.0)
+
+    count = count_cursos + count_certificados + count_serums
+    total = round(total_cursos + total_certificados + total_serums, 2)
+
+    ventas_cursos = cursos_stats.get("ventas", [])
+    ventas_serums = serums_stats.get("ventas", [])
+
+    return _serialize_dates(
+        {
+            "username": "Todos los asesores",
+            "month": month_label,
+            "count": count,
+            "total": total,
+            "codigo": "",
+            "all_asesores": True,
+            "nofilter": bool(nofilter),
+            "d_start": d_start,
+            "d_end": d_end,
+            "cert_count": cert_stats.get("count", 0),
+            "ultimos_certificados": cert_stats.get("certificados", [])[:50],
+            "count_cursos": count_cursos,
+            "total_cursos": total_cursos,
+            "count_certificados": count_certificados,
+            "total_certificados": total_certificados,
+            "count_serums": count_serums,
+            "total_serums": total_serums,
+            "ultimas": ventas_cursos[:50],
+            "ultimas_cursos": ventas_cursos[:50],
+            "ultimos_serums": ventas_serums[:50],
+            "ventas_cursos": ventas_cursos,
+            "ventas_serums": ventas_serums,
+            "error": None,
+        }
+    )
+
+
 def get_mi_dashboard_data(
     user_dict: Dict[str, Any],
     anio: Optional[int],
@@ -528,19 +600,10 @@ def get_mi_dashboard_data(
     if refreshed:
         user.update(refreshed)
 
-    tab_title = settings.SHEETS["cursos"]["worksheets"]["registro"]
+    if (user.get("role") or "").strip().lower() == "admin" and not codigo_override:
+        return get_admin_mi_dashboard_data(anio, mes, nofilter)
 
-    if nofilter:
-        d_start, d_end = date(1900, 1, 1), date(2999, 12, 31)
-        month_label = "Todos"
-    elif anio and mes:
-        try:
-            d_start, d_end = _month_bounds(int(anio), int(mes))
-            month_label = f"{MESES_ES[int(mes) - 1].capitalize()} {int(anio)}"
-        except Exception:
-            d_start, d_end, month_label = _bounds_from_monthly_ws(tab_title)
-    else:
-        d_start, d_end, month_label = _bounds_from_monthly_ws(tab_title)
+    d_start, d_end, month_label = _resolve_periodo(anio, mes, nofilter)
 
     codigo = (user.get("codigo") or "").strip()
     if codigo_override:

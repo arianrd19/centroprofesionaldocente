@@ -21,7 +21,7 @@ function DashboardLayout() {
 
   const navItems = [
     isAdmin
-      ? { to: '/dashboard', end: true, icon: '📈', label: 'Dashboard Admin' }
+      ? { to: '/dashboard-admin', end: true, icon: '📈', label: 'Dashboard Admin' }
       : { to: '/dashboard', end: true, icon: '🏠', label: 'Inicio' },
     { to: '/dashboard/mi-panel', icon: '📊', label: 'Últimas ventas' },
     ...(isAdmin ? [] : [{ to: '/dashboard/cobranza', icon: '💲', label: 'Cobranza' }]),
@@ -44,7 +44,7 @@ function DashboardLayout() {
   ]
 
   return (
-    <AppShell user={user} logoTo="/dashboard" navItems={navItems} footerItems={footerItems}>
+    <AppShell user={user} logoTo={isAdmin ? '/dashboard-admin' : '/dashboard'} navItems={navItems} footerItems={footerItems}>
       <Outlet />
     </AppShell>
   )

@@ -17,9 +17,10 @@ function saleFecha(v) {
   return v.fecha || v.fecha_venta_fmt || v.fecha_venta || '—'
 }
 
-function VentaRow({ v }) {
+function VentaRow({ v, showAsesor }) {
   return (
     <tr>
+      {showAsesor && <td>{v.asesor || '—'}</td>}
       <td>{saleFecha(v)}</td>
       <td>{v.cliente || '—'}</td>
       <td>{v.dni || '—'}</td>
@@ -31,7 +32,7 @@ function VentaRow({ v }) {
   )
 }
 
-function VentaCard({ v }) {
+function VentaCard({ v, showAsesor }) {
   return (
     <article className="dash-panel__sale-card">
       <header className="dash-panel__sale-head">
@@ -42,6 +43,12 @@ function VentaCard({ v }) {
         <div className="dash-panel__sale-amount">S/ {saleMonto(v)}</div>
       </header>
       <div className="dash-panel__sale-grid">
+        {showAsesor && (
+          <div className="dash-panel__sale-field">
+            <span className="dash-panel__sale-field-label">Asesor</span>
+            <span className="dash-panel__sale-field-value">{v.asesor || '—'}</span>
+          </div>
+        )}
         <div className="dash-panel__sale-field">
           <span className="dash-panel__sale-field-label">DNI</span>
           <span className="dash-panel__sale-field-value">{v.dni || '—'}</span>
@@ -63,7 +70,7 @@ function VentaCard({ v }) {
   )
 }
 
-function CertificadoCard({ c }) {
+function CertificadoCard({ c, showAsesor }) {
   return (
     <article className="dash-panel__sale-card dash-panel__sale-card--cert">
       <header className="dash-panel__sale-head">
@@ -74,6 +81,12 @@ function CertificadoCard({ c }) {
         <div className="dash-panel__sale-amount">S/ {formatMoney(c.monto_depositado)}</div>
       </header>
       <div className="dash-panel__sale-grid">
+        {showAsesor && (
+          <div className="dash-panel__sale-field">
+            <span className="dash-panel__sale-field-label">Asesor</span>
+            <span className="dash-panel__sale-field-value">{c.asesor || '—'}</span>
+          </div>
+        )}
         <div className="dash-panel__sale-field">
           <span className="dash-panel__sale-field-label">Celular</span>
           <span className="dash-panel__sale-field-value">{c.celular || '—'}</span>
@@ -95,7 +108,7 @@ function CertificadoCard({ c }) {
   )
 }
 
-function SerumsCard({ v }) {
+function SerumsCard({ v, showAsesor }) {
   return (
     <article className="dash-panel__sale-card dash-panel__sale-card--serums">
       <header className="dash-panel__sale-head">
@@ -106,6 +119,12 @@ function SerumsCard({ v }) {
         <div className="dash-panel__sale-amount">S/ {saleMonto(v)}</div>
       </header>
       <div className="dash-panel__sale-grid">
+        {showAsesor && (
+          <div className="dash-panel__sale-field">
+            <span className="dash-panel__sale-field-label">Asesor</span>
+            <span className="dash-panel__sale-field-value">{v.asesor || '—'}</span>
+          </div>
+        )}
         <div className="dash-panel__sale-field">
           <span className="dash-panel__sale-field-label">DNI</span>
           <span className="dash-panel__sale-field-value">{v.dni || '—'}</span>
@@ -159,11 +178,12 @@ function MiDashboard() {
   if (!data) return <div className="dash-empty">Error al cargar panel.</div>
 
   const emptyLabel = (defaultLabel) => (normalizedQuery ? 'Sin resultados para tu búsqueda' : defaultLabel)
+  const showAsesor = !!data.all_asesores
 
   return (
     <div className="dash-panel">
       <header className="dash-panel__header">
-        <h1>Últimas ventas</h1>
+        <h1>{showAsesor ? 'Últimas ventas — todos los asesores' : 'Últimas ventas'}</h1>
         <p>Resumen de {data.month}</p>
       </header>
 
@@ -187,6 +207,7 @@ function MiDashboard() {
             <table className="dash-panel__table">
               <thead>
                 <tr>
+                  {showAsesor && <th>Asesor</th>}
                   <th>Fecha</th>
                   <th>Cliente</th>
                   <th>DNI</th>
@@ -199,12 +220,12 @@ function MiDashboard() {
               <tbody>
                 {ultimasCursos.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="dash-panel__empty">
+                    <td colSpan={showAsesor ? 8 : 7} className="dash-panel__empty">
                       {emptyLabel('Sin ventas de cursos este mes')}
                     </td>
                   </tr>
                 ) : (
-                  ultimasCursos.map((v, i) => <VentaRow key={i} v={v} />)
+                  ultimasCursos.map((v, i) => <VentaRow key={i} v={v} showAsesor={showAsesor} />)
                 )}
               </tbody>
             </table>
@@ -217,7 +238,7 @@ function MiDashboard() {
               <div className="dash-panel__sale-title">{emptyLabel('Sin ventas de cursos este mes')}</div>
             </article>
           ) : (
-            ultimasCursos.map((v, i) => <VentaCard key={i} v={v} />)
+            ultimasCursos.map((v, i) => <VentaCard key={i} v={v} showAsesor={showAsesor} />)
           )}
         </div>
       </section>
@@ -233,6 +254,7 @@ function MiDashboard() {
             <table className="dash-panel__table">
               <thead>
                 <tr>
+                  {showAsesor && <th>Asesor</th>}
                   <th>Fecha</th>
                   <th>Cliente</th>
                   <th>DNI</th>
@@ -244,13 +266,14 @@ function MiDashboard() {
               <tbody>
                 {ultimosSerums.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="dash-panel__empty">
+                    <td colSpan={showAsesor ? 7 : 6} className="dash-panel__empty">
                       {emptyLabel('Sin ventas serums este mes')}
                     </td>
                   </tr>
                 ) : (
                   ultimosSerums.map((v, i) => (
                     <tr key={i}>
+                      {showAsesor && <td>{v.asesor || '—'}</td>}
                       <td>{saleFecha(v)}</td>
                       <td>{v.cliente || '—'}</td>
                       <td>{v.dni || '—'}</td>
@@ -271,7 +294,7 @@ function MiDashboard() {
               <div className="dash-panel__sale-title">{emptyLabel('Sin ventas serums este mes')}</div>
             </article>
           ) : (
-            ultimosSerums.map((v, i) => <SerumsCard key={i} v={v} />)
+            ultimosSerums.map((v, i) => <SerumsCard key={i} v={v} showAsesor={showAsesor} />)
           )}
         </div>
       </section>
@@ -287,6 +310,7 @@ function MiDashboard() {
             <table className="dash-panel__table">
               <thead>
                 <tr>
+                  {showAsesor && <th>Asesor</th>}
                   <th>Fecha</th>
                   <th>Cliente</th>
                   <th>Celular</th>
@@ -299,13 +323,14 @@ function MiDashboard() {
               <tbody>
                 {ultimosCertificados.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="dash-panel__empty">
+                    <td colSpan={showAsesor ? 8 : 7} className="dash-panel__empty">
                       {emptyLabel('Sin certificados este mes')}
                     </td>
                   </tr>
                 ) : (
                   ultimosCertificados.map((c, i) => (
                     <tr key={i}>
+                      {showAsesor && <td>{c.asesor || '—'}</td>}
                       <td>{c.fecha || '—'}</td>
                       <td>{c.cliente || '—'}</td>
                       <td>{c.celular || '—'}</td>
@@ -327,7 +352,7 @@ function MiDashboard() {
               <div className="dash-panel__sale-title">{emptyLabel('Sin certificados este mes')}</div>
             </article>
           ) : (
-            ultimosCertificados.map((c, i) => <CertificadoCard key={i} c={c} />)
+            ultimosCertificados.map((c, i) => <CertificadoCard key={i} c={c} showAsesor={showAsesor} />)
           )}
         </div>
       </section>
