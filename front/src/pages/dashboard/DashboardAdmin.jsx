@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../../utils/api'
-import ConfirmModal from '../../components/ConfirmModal'
 import './DashboardAdmin.css'
 
 const EMPTY_FORM = {
@@ -35,8 +34,6 @@ function DashboardAdmin() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingEmail, setEditingEmail] = useState(null)
   const [form, setForm] = useState({ ...EMPTY_FORM })
-  const [deleteTarget, setDeleteTarget] = useState(null)
-  const [deleting, setDeleting] = useState(false)
 
   const cargarAsesores = useCallback(async () => {
     setLoading(true)
@@ -151,38 +148,6 @@ function DashboardAdmin() {
     }
   }
 
-  const requestDelete = (asesor) => {
-    setDeleteTarget(asesor)
-    setError('')
-    setSuccess('')
-  }
-
-  const cancelDelete = () => {
-    if (deleting) return
-    setDeleteTarget(null)
-  }
-
-  const confirmDelete = async () => {
-    if (!deleteTarget?.email || deleting) return
-    setDeleting(true)
-    setError('')
-    setSuccess('')
-    try {
-      const res = await api.delete(
-        `/dashboard/admin/asesores/${encodeURIComponent(deleteTarget.email)}`,
-      )
-      setSuccess(res.data?.message || 'Usuario eliminado correctamente.')
-      setDeleteTarget(null)
-      await cargarAsesores()
-    } catch (err) {
-      const detail = err.response?.data?.detail
-      setError(typeof detail === 'string' ? detail : 'No se pudo eliminar el usuario.')
-      setDeleteTarget(null)
-    } finally {
-      setDeleting(false)
-    }
-  }
-
   if (loading) return <div className="dash-empty">Cargando usuarios...</div>
 
   return (
@@ -252,13 +217,6 @@ function DashboardAdmin() {
                     >
                       Panel
                     </Link>
-                    <button
-                      type="button"
-                      className="dash-btn-link dash-admin__btn-delete"
-                      onClick={() => requestDelete(a)}
-                    >
-                      Eliminar
-                    </button>
                   </td>
                 </tr>
               ))
@@ -395,21 +353,6 @@ function DashboardAdmin() {
           </div>
         </div>
       )}
-
-      <ConfirmModal
-        isOpen={Boolean(deleteTarget)}
-        onClose={cancelDelete}
-        onConfirm={confirmDelete}
-        type="danger"
-        title="¿Eliminar usuario?"
-        message={
-          deleteTarget
-            ? `Se eliminará permanentemente a ${deleteTarget.nombre || deleteTarget.email} (${deleteTarget.email}) de la hoja CREDENCIALES. Esta acción no se puede deshacer.`
-            : ''
-        }
-        confirmText={deleting ? 'Eliminando...' : 'Sí, eliminar'}
-        cancelText="Cancelar"
-      />
     </div>
   )
 }
