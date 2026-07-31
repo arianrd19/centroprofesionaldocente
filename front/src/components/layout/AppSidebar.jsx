@@ -19,7 +19,7 @@ function roleLabel(user) {
 
 function AppSidebar({
   user,
-  logoTo = '/dashboard',
+  logoTo = '/',
   navItems = [],
   footerItems = [],
   isOpen = false,

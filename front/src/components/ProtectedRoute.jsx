@@ -11,7 +11,7 @@ function ProtectedRoute({ children }) {
   }
 
   if (!CERT_PANEL_ROLES.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/asesor" replace />
   }
 
   return children

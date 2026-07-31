@@ -50,7 +50,7 @@ function Panel() {
   ]
 
   if (user.role === 'admin') {
-    navItems.push({ to: '/dashboard', icon: '📊', label: 'Panel Asesores' })
+    navItems.push({ to: '/admin', icon: '📊', label: 'Panel Asesores' })
   }
 
   const footerItems = [

@@ -8,7 +8,9 @@ function Layout() {
 
   // En el panel y certificado no usamos este header/layout público (pantalla completa)
   if (location.pathname.startsWith('/panel') ||
-    location.pathname.startsWith('/dashboard') ||
+    location.pathname.startsWith('/admin') ||
+    location.pathname.startsWith('/asesor') ||
+    location.pathname.startsWith('/dashboard') || // URLs viejas, redirigen via LegacyDashboardRedirect
     location.pathname.startsWith('/certificado/') ||
     location.pathname.startsWith('/consulta/') ||
     location.pathname === '/login' ||

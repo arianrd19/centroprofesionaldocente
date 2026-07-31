@@ -45,7 +45,7 @@ function Login() {
       if (response.data.role === 'admin') {
         navigate('/panel/certificados')
       } else {
-        navigate('/dashboard')
+        navigate('/asesor')
       }
     } catch (err) {
       setError(err.response?.data?.detail || 'Credenciales incorrectas o error de conexión.')
