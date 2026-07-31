@@ -25,7 +25,7 @@ export function AsesorRoute({ children }) {
     return <Navigate to="/login?sesion=1" replace />
   }
   if (isAdminUser(getUser())) {
-    return <Navigate to="/admin" replace />
+    return <Navigate to="/admin/dashboard" replace />
   }
   return children
 }
@@ -35,5 +35,5 @@ export function RootRedirect() {
   if (!hasValidSession()) {
     return <Navigate to="/login" replace />
   }
-  return <Navigate to={isAdminUser(getUser()) ? '/admin' : '/asesor'} replace />
+  return <Navigate to={isAdminUser(getUser()) ? '/admin/dashboard' : '/asesor'} replace />
 }

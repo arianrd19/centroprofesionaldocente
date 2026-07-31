@@ -10,6 +10,7 @@ function DashboardLayout() {
   const navigate = useNavigate()
   const isAdmin = isAdminUser(user)
   const prefix = isAdmin ? '/admin' : '/asesor'
+  const homeTo = isAdmin ? '/admin/dashboard' : prefix
 
   const handleLogout = async () => {
     try {
@@ -23,8 +24,8 @@ function DashboardLayout() {
 
   const navItems = [
     isAdmin
-      ? { to: prefix, end: true, icon: '📈', label: 'Dashboard Admin' }
-      : { to: prefix, end: true, icon: '🏠', label: 'Inicio' },
+      ? { to: homeTo, end: true, icon: '📈', label: 'Dashboard Admin' }
+      : { to: homeTo, end: true, icon: '🏠', label: 'Inicio' },
     { to: `${prefix}/ventas`, icon: '📊', label: isAdmin ? 'Listado de ventas' : 'Últimas ventas' },
     ...(isAdmin ? [] : [
       { to: `${prefix}/cobranza`, icon: '💲', label: 'Cobranza' },
@@ -48,7 +49,7 @@ function DashboardLayout() {
   ]
 
   return (
-    <AppShell user={user} logoTo={prefix} navItems={navItems} footerItems={footerItems}>
+    <AppShell user={user} logoTo={homeTo} navItems={navItems} footerItems={footerItems}>
       <Outlet />
     </AppShell>
   )

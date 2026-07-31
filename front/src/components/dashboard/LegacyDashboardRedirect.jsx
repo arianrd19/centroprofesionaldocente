@@ -25,9 +25,11 @@ function LegacyDashboardRedirect() {
     return <Navigate to="/login?sesion=1" replace />
   }
 
-  const prefix = isAdminUser(getUser()) ? '/admin' : '/asesor'
+  const isAdmin = isAdminUser(getUser())
+  const prefix = isAdmin ? '/admin' : '/asesor'
   const segment = (rest || '').split('/')[0]
-  const mapped = SEGMENT_MAP[segment] ?? ''
+  let mapped = SEGMENT_MAP[segment] ?? ''
+  if (isAdmin && !mapped) mapped = 'dashboard' // /admin (bare) ahora vive en /admin/dashboard
   const target = mapped ? `${prefix}/${mapped}` : prefix
 
   return <Navigate to={`${target}${location.search}`} replace />

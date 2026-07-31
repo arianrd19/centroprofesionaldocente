@@ -49,7 +49,8 @@ function DashboardRoutes() {
           </AdminRoute>
         }
       >
-        <Route index element={<DashboardAdminHome />} />
+        <Route index element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardAdminHome />} />
         <Route path="gestion-usuarios" element={<DashboardAdmin />} />
         <Route path="ventas" element={<MiDashboard />} />
         <Route path="consulta-ventas" element={<VentasConsulta />} />
