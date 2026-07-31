@@ -762,13 +762,12 @@ def submit_venta(
         user.update(refreshed)
 
     codigo = (user.get("codigo") or "").strip()
-    nombre = (user.get("nombre") or user.get("name") or "").strip()
     if not codigo:
         return {"success": False, "error": "No se encontró el código del asesor en credenciales."}
 
     ensure_cliente_in_sheet(payload)
 
-    personal = f"{codigo} - {nombre}" if nombre else codigo
+    personal = codigo
     ws_title = settings.SHEETS["cursos"]["worksheets"]["registro"]
 
     fecha_raw = (payload.get("fecha_venta") or "").strip()
@@ -830,13 +829,12 @@ def submit_serums(
         user.update(refreshed)
 
     codigo = (user.get("codigo") or "").strip()
-    nombre = (user.get("nombre") or user.get("name") or "").strip()
     if not codigo:
         return {"success": False, "error": "No se encontró el código del asesor en credenciales."}
 
     ensure_cliente_in_sheet(payload)
 
-    personal = f"{codigo} - {nombre}" if nombre else codigo
+    personal = codigo
     ws_title = settings.SHEETS["serums_mensual"]["worksheets"]["registro"]
 
     fecha_raw = (payload.get("fecha_venta") or "").strip()
@@ -904,13 +902,12 @@ def submit_certificado(
         user.update(refreshed)
 
     codigo = (user.get("codigo") or "").strip()
-    nombre = (user.get("nombre") or user.get("name") or "").strip()
     if not codigo:
         return {"success": False, "error": "No se encontró el código del asesor en credenciales."}
 
     ensure_cliente_in_sheet(payload)
 
-    personal = f"{codigo} - {nombre}" if nombre else codigo
+    personal = codigo
     ws_title = settings.SHEETS["certificados_mensual"]["worksheets"]["registro"]
 
     fecha_raw = (payload.get("fecha_venta") or "").strip()
