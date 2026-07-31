@@ -24,10 +24,12 @@ function DashboardLayout() {
       ? { to: '/dashboard-admin', end: true, icon: '📈', label: 'Dashboard Admin' }
       : { to: '/dashboard', end: true, icon: '🏠', label: 'Inicio' },
     { to: '/dashboard/mi-panel', icon: '📊', label: 'Últimas ventas' },
-    ...(isAdmin ? [] : [{ to: '/dashboard/cobranza', icon: '💲', label: 'Cobranza' }]),
-    { to: '/dashboard/subir-ventas', icon: '📤', label: 'Subir ventas' },
-    { to: '/dashboard/subir-ventas-serums', icon: '🧪', label: 'Subir ventas SERUMS' },
-    { to: '/dashboard/subir-certificados', icon: '📜', label: 'Subir certificados' },
+    ...(isAdmin ? [] : [
+      { to: '/dashboard/cobranza', icon: '💲', label: 'Cobranza' },
+      { to: '/dashboard/subir-ventas', icon: '📤', label: 'Subir ventas' },
+      { to: '/dashboard/subir-ventas-serums', icon: '🧪', label: 'Subir ventas SERUMS' },
+      { to: '/dashboard/subir-certificados', icon: '📜', label: 'Subir certificados' },
+    ]),
     { to: '/dashboard/ventas', icon: '💰', label: 'Consulta ventas' },
     { to: '/dashboard/menciones', icon: '🎓', label: 'Menciones' },
   ]
