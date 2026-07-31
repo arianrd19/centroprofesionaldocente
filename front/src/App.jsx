@@ -47,7 +47,8 @@ function DashboardRoutes() {
         <Route index element={<DashboardIndex />} />
         <Route path="mi-panel" element={<MiDashboard />} />
         <Route path="cobranza" element={<Cobranza />} />
-        <Route path="ventas" element={<VentasConsulta />} />
+        <Route path="consulta-ventas" element={<VentasConsulta />} />
+        <Route path="ventas" element={<Navigate to="/dashboard/consulta-ventas" replace />} />
         <Route path="subir-ventas" element={<SubirVentas />} />
         <Route path="subir-ventas-serums" element={<SubirVentasSerums />} />
         <Route path="subir-certificados" element={<SubirCertificados />} />

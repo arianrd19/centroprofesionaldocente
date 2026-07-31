@@ -183,7 +183,7 @@ function MiDashboard() {
   return (
     <div className="dash-panel">
       <header className="dash-panel__header">
-        <h1>{showAsesor ? 'Últimas ventas — todos los asesores' : 'Últimas ventas'}</h1>
+        <h1>{showAsesor ? 'Listado de ventas — todos los asesores' : 'Últimas ventas'}</h1>
         <p>Resumen de {data.month}</p>
       </header>
 
