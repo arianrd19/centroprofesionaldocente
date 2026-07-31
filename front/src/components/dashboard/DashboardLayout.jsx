@@ -23,8 +23,8 @@ function DashboardLayout() {
     isAdmin
       ? { to: '/dashboard-admin', end: true, icon: '📈', label: 'Dashboard Admin' }
       : { to: '/dashboard', end: true, icon: '🏠', label: 'Inicio' },
-    { to: '/dashboard/mi-panel', icon: '📊', label: 'Últimas ventas' },
     ...(isAdmin ? [] : [
+      { to: '/dashboard/mi-panel', icon: '📊', label: 'Últimas ventas' },
       { to: '/dashboard/cobranza', icon: '💲', label: 'Cobranza' },
       { to: '/dashboard/subir-ventas', icon: '📤', label: 'Subir ventas' },
       { to: '/dashboard/subir-ventas-serums', icon: '🧪', label: 'Subir ventas SERUMS' },

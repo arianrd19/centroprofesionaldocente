@@ -894,7 +894,7 @@ class GoogleSheetService:
                     "operacion": r.get(k_operacion, "") if k_operacion else "",
                     "especialidad": r.get(k_especialidad, "") if k_especialidad else "",
                     "sub_especialidad": r.get(k_sub_especialidad, "") if k_sub_especialidad else "",
-                    "asesor": code_val,
+                    "asesor": str(code_raw or "").strip(),
                     "monto": monto,
                     "_fecha_dt": f,
                 })
@@ -1169,7 +1169,8 @@ class GoogleSheetService:
             target = self._extract_code(personal_code).upper() if filtro_activo else None
             certificados = []
             for r in rows:
-                code_val = self._extract_code(r.get(k_personal, ""))
+                code_raw = r.get(k_personal, "")
+                code_val = self._extract_code(code_raw)
                 if filtro_activo and code_val != target:
                     continue
 
@@ -1188,7 +1189,7 @@ class GoogleSheetService:
                     "tipo_documento": r.get(k_tipo_doc, "")  if k_tipo_doc else "",
                     "horas"         : r.get(k_horas, "")     if k_horas    else "",
                     "menciones"     : r.get(k_menciones, "") if k_menciones else "",
-                    "asesor"        : code_val,
+                    "asesor"        : str(code_raw or "").strip(),
                     "_fecha_dt"     : f if f else date.min,
                 })
 
