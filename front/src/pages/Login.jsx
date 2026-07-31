@@ -43,7 +43,7 @@ function Login() {
       })
 
       if (response.data.role === 'admin') {
-        navigate('/panel/certificados')
+        navigate('/admin/dashboard')
       } else {
         navigate('/asesor')
       }
