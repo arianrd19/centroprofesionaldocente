@@ -855,16 +855,17 @@ class GoogleSheetService:
                 _log.debug(f"No se encontró columna PERSONAL en {ws_title}")
                 return ventas, total
 
-            target = self._extract_code(personal_code).upper()
-            _log.info("Buscando ventas para %s en %s (Rango: %s - %s)", target, ws_title, d_start, d_end)
-            
+            filtro_activo = bool(personal_code)
+            target = self._extract_code(personal_code).upper() if filtro_activo else None
+            _log.info("Buscando ventas para %s en %s (Rango: %s - %s)", target or "TODOS", ws_title, d_start, d_end)
+
             for r in rows:
                 code_raw = r.get(k_personal, "")
                 code_val = self._extract_code(code_raw)
-                
-                if code_val != target:
+
+                if filtro_activo and code_val != target:
                     continue
-                
+
                 raw_fecha = r.get(k_fecha, "")
                 f = self._parse_date_any(raw_fecha) if k_fecha else None
                 
@@ -893,6 +894,7 @@ class GoogleSheetService:
                     "operacion": r.get(k_operacion, "") if k_operacion else "",
                     "especialidad": r.get(k_especialidad, "") if k_especialidad else "",
                     "sub_especialidad": r.get(k_sub_especialidad, "") if k_sub_especialidad else "",
+                    "asesor": code_val,
                     "monto": monto,
                     "_fecha_dt": f,
                 })
@@ -928,6 +930,29 @@ class GoogleSheetService:
             _log.debug("get_sales_by_code error: %s", e, exc_info=False)
             return empty
 
+    def get_all_sales(self, d_start, d_end, config):
+        """Todas las ventas de cursos en el rango, sin filtrar por asesor (uso admin)."""
+        empty = {"count": 0, "total_monto": 0.0, "ventas": []}
+        try:
+            cursos_cfg = config["SHEETS"]["cursos"]
+            sh = self.get_sheet_by_key(cursos_cfg["id"])
+            if not sh:
+                return empty
+
+            ws_title = cursos_cfg["worksheets"]["registro"]
+            ventas, total = self._get_sales_from_worksheet(
+                sh, ws_title, None, d_start, d_end, None
+            )
+
+            ventas.sort(key=lambda x: x.get("_fecha_dt") or date.min, reverse=True)
+            for v in ventas:
+                v.pop("_fecha_dt", None)
+
+            return {"count": len(ventas), "total_monto": round(total, 2), "ventas": ventas}
+        except Exception as e:
+            _log.debug("get_all_sales error: %s", e, exc_info=False)
+            return empty
+
     def get_serums_by_code(self, personal_code: str, d_start, d_end, config):
         """Filtra ventas SERUMS por PERSONAL en la hoja mensual serums_mensual."""
         empty = {"count": 0, "total_monto": 0.0, "ventas": []}
@@ -951,6 +976,29 @@ class GoogleSheetService:
             return {"count": len(ventas), "total_monto": round(total, 2), "ventas": ventas}
         except Exception as e:
             _log.debug("get_serums_by_code error: %s", e, exc_info=False)
+            return empty
+
+    def get_all_serums(self, d_start, d_end, config):
+        """Todas las ventas SERUMS en el rango, sin filtrar por asesor (uso admin)."""
+        empty = {"count": 0, "total_monto": 0.0, "ventas": []}
+        try:
+            serums_cfg = config["SHEETS"]["serums_mensual"]
+            sh = self.get_sheet_by_key(serums_cfg["id"])
+            if not sh:
+                return empty
+
+            ws_title = serums_cfg["worksheets"]["registro"]
+            ventas, total = self._get_sales_from_worksheet(
+                sh, ws_title, None, d_start, d_end, "SERUMS"
+            )
+
+            ventas.sort(key=lambda x: x.get("_fecha_dt") or date.min, reverse=True)
+            for v in ventas:
+                v.pop("_fecha_dt", None)
+
+            return {"count": len(ventas), "total_monto": round(total, 2), "ventas": ventas}
+        except Exception as e:
+            _log.debug("get_all_serums error: %s", e, exc_info=False)
             return empty
 
     def _get_cobranzas_from_worksheet(self, sh, ws_title, personal_code, d_start, d_end, producto_tipo=None):
@@ -1071,9 +1119,16 @@ class GoogleSheetService:
         Lee del libro mensual de 'certificados'.
         Devuelve: {"count": int, "certificados": list[dict]}
         """
-        empty = {"count": 0, "certificados": []}
         if not personal_code:
-            return empty
+            return {"count": 0, "certificados": []}
+        return self._get_certificados(personal_code, d_start, d_end, config)
+
+    def get_all_certificates(self, d_start, d_end, config):
+        """Todos los certificados en el rango, sin filtrar por asesor (uso admin)."""
+        return self._get_certificados(None, d_start, d_end, config)
+
+    def _get_certificados(self, personal_code, d_start, d_end, config):
+        empty = {"count": 0, "certificados": []}
         try:
             cert_cfg = config["SHEETS"]["certificados_mensual"]
             sh = self.get_sheet_by_key(cert_cfg["id"])
@@ -1110,10 +1165,12 @@ class GoogleSheetService:
                 _log.warning("No se encontró columna PERSONAL en %s", ws_title)
                 return empty
 
-            target = self._extract_code(personal_code).upper()
+            filtro_activo = bool(personal_code)
+            target = self._extract_code(personal_code).upper() if filtro_activo else None
             certificados = []
             for r in rows:
-                if self._extract_code(r.get(k_personal, "")) != target:
+                code_val = self._extract_code(r.get(k_personal, ""))
+                if filtro_activo and code_val != target:
                     continue
 
                 f = self._parse_date_any(r.get(k_fecha, "")) if k_fecha else None
@@ -1131,6 +1188,7 @@ class GoogleSheetService:
                     "tipo_documento": r.get(k_tipo_doc, "")  if k_tipo_doc else "",
                     "horas"         : r.get(k_horas, "")     if k_horas    else "",
                     "menciones"     : r.get(k_menciones, "") if k_menciones else "",
+                    "asesor"        : code_val,
                     "_fecha_dt"     : f if f else date.min,
                 })
 
@@ -1139,10 +1197,10 @@ class GoogleSheetService:
                 c.pop("_fecha_dt", None)
 
             total_monto = round(sum(c.get("monto_depositado", 0) for c in certificados), 2)
-            _log.info("Certificados encontrados para %s: %d", personal_code, len(certificados))
+            _log.info("Certificados encontrados para %s: %d", personal_code or "TODOS", len(certificados))
             return {"count": len(certificados), "total_monto": total_monto, "certificados": certificados}
         except Exception as e:
-            _log.debug("get_certificates_by_code error: %s", e, exc_info=False)
+            _log.debug("get_certificados error: %s", e, exc_info=False)
             return empty
 
 

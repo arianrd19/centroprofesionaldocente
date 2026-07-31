@@ -10,7 +10,7 @@ import PdfFullView from './pages/PdfFullView'
 import ProtectedRoute from './components/ProtectedRoute'
 import ExternalRedirect from './components/ExternalRedirect'
 import DashboardLayout, { DashboardProtectedRoute } from './components/dashboard/DashboardLayout'
-import DashboardHome from './pages/dashboard/DashboardHome'
+import DashboardIndex from './pages/dashboard/DashboardIndex'
 import MiDashboard from './pages/dashboard/MiDashboard'
 import Cobranza from './pages/dashboard/Cobranza'
 import VentasConsulta from './pages/dashboard/VentasConsulta'
@@ -43,7 +43,7 @@ function DashboardRoutes() {
           </DashboardProtectedRoute>
         }
       >
-        <Route index element={<DashboardHome />} />
+        <Route index element={<DashboardIndex />} />
         <Route path="mi-panel" element={<MiDashboard />} />
         <Route path="cobranza" element={<Cobranza />} />
         <Route path="ventas" element={<VentasConsulta />} />

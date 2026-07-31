@@ -67,6 +67,12 @@ async def dashboard_home(user: dict = Depends(get_dashboard_user)):
     return dashboard_service.get_home_data(user.get("email", ""))
 
 
+@router.get("/admin/home")
+async def dashboard_admin_home(admin: dict = Depends(get_admin_user)):
+    """Estadisticas agregadas de todos los asesores (solo admin)."""
+    return dashboard_service.get_admin_home_data()
+
+
 @router.get("/mi-dashboard")
 async def mi_dashboard(
     anio: Optional[int] = None,

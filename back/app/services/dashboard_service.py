@@ -431,6 +431,88 @@ def get_home_data(user_email: str) -> Dict[str, Any]:
     )
 
 
+def get_admin_home_data() -> Dict[str, Any]:
+    """Estadisticas agregadas de TODOS los asesores (solo admin): ventas del
+    mes en curso (cursos + certificados + serums) y leaderboard completo."""
+    tab_title = settings.SHEETS["cursos"]["worksheets"]["registro"]
+    d_start, d_end, month_label = _bounds_from_monthly_ws(tab_title)
+    cfg = _sheets_config()
+
+    error = None
+    try:
+        cursos_stats = gs_service.get_all_sales(d_start, d_end, cfg)
+    except Exception as exc:
+        cursos_stats = {"count": 0, "total_monto": 0.0, "ventas": []}
+        error = f"Error al cargar ventas: {exc}"
+    try:
+        cert_stats = gs_service.get_all_certificates(d_start, d_end, cfg)
+    except Exception as exc:
+        cert_stats = {"count": 0, "total_monto": 0.0, "certificados": []}
+        error = f"{error}; Error al cargar certificados: {exc}" if error else f"Error al cargar certificados: {exc}"
+    try:
+        serums_stats = gs_service.get_all_serums(d_start, d_end, cfg)
+    except Exception as exc:
+        serums_stats = {"count": 0, "total_monto": 0.0, "ventas": []}
+        error = f"{error}; Error al cargar serums: {exc}" if error else f"Error al cargar serums: {exc}"
+
+    count_cursos = cursos_stats.get("count", 0)
+    total_cursos = cursos_stats.get("total_monto", 0.0)
+    count_certificados = cert_stats.get("count", 0)
+    total_certificados = cert_stats.get(
+        "total_monto",
+        sum(c.get("monto_depositado", 0) for c in cert_stats.get("certificados", [])),
+    )
+    count_serums = serums_stats.get("count", 0)
+    total_serums = serums_stats.get("total_monto", 0.0)
+
+    count = count_cursos + count_certificados + count_serums
+    total = round(total_cursos + total_certificados + total_serums, 2)
+
+    leaderboard: List[Dict[str, Any]] = []
+    try:
+        credenciales = gs_service.get_all_records(book_name="credenciales", worksheet_name="usuarios")
+        usuarios = []
+        for row in credenciales:
+            volumen_val = row.get("VOLUMEN")
+            if volumen_val is not None and str(volumen_val).strip() != "":
+                try:
+                    usuarios.append(
+                        {
+                            "nombre": row.get("Nombres y Apellidos", ""),
+                            "volumen": safe_float(volumen_val, default=0.0),
+                            "ventas": safe_int(row.get("VENTAS"), default=0),
+                            "codigo": row.get("Codigo", ""),
+                            "estado": row.get("Estado", ""),
+                        }
+                    )
+                except Exception:
+                    continue
+        usuarios_ordenados = sorted(usuarios, key=lambda x: x["volumen"], reverse=True)
+        for idx, u in enumerate(usuarios_ordenados, start=1):
+            u["posicion"] = idx
+        leaderboard = usuarios_ordenados
+    except Exception:
+        leaderboard = []
+
+    return _serialize_dates(
+        {
+            "month": month_label,
+            "now": _now_lima(),
+            "count": count,
+            "total": total,
+            "count_cursos": count_cursos,
+            "total_cursos": total_cursos,
+            "count_certificados": count_certificados,
+            "total_certificados": total_certificados,
+            "count_serums": count_serums,
+            "total_serums": total_serums,
+            "total_asesores": len(leaderboard),
+            "leaderboard": leaderboard,
+            "error": error,
+        }
+    )
+
+
 def get_mi_dashboard_data(
     user_dict: Dict[str, Any],
     anio: Optional[int],
