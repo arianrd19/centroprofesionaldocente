@@ -248,7 +248,7 @@ function DashboardAdmin() {
                     </button>
                     <Link
                       className="dash-btn-link"
-                      to={`/dashboard/mi-panel?codigo=${encodeURIComponent(a.codigo)}`}
+                      to={`/dashboard/ventas?codigo=${encodeURIComponent(a.codigo)}`}
                     >
                       Panel
                     </Link>

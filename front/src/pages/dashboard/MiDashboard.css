@@ -59,6 +59,93 @@
   }
 }
 
+/* Tabs de tipo de venta */
+.dash-panel__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.dash-panel__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid #d8dde0;
+  background: var(--dp-card);
+  color: var(--dp-ink);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.dash-panel__tab:hover {
+  border-color: var(--dp-brand);
+}
+
+.dash-panel__tab--active {
+  background: var(--dp-brand);
+  border-color: var(--dp-brand);
+  color: #fff;
+}
+
+.dash-panel__tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.08);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dash-panel__tab--active .dash-panel__tab-count {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Paginación */
+.dash-panel__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.dash-panel__page-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #d8dde0;
+  background: var(--dp-card);
+  color: var(--dp-ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, opacity 0.2s;
+}
+
+.dash-panel__page-btn:hover:not(:disabled) {
+  border-color: var(--dp-brand);
+}
+
+.dash-panel__page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dash-panel__page-info {
+  font-size: 13px;
+  color: var(--dp-ink);
+  font-weight: 600;
+}
+
 /* Tabla */
 .dash-panel__section {
   margin-top: 40px;

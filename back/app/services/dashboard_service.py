@@ -568,16 +568,16 @@ def get_admin_mi_dashboard_data(
             "d_start": d_start,
             "d_end": d_end,
             "cert_count": cert_stats.get("count", 0),
-            "ultimos_certificados": cert_stats.get("certificados", [])[:50],
+            "ultimos_certificados": cert_stats.get("certificados", []),
             "count_cursos": count_cursos,
             "total_cursos": total_cursos,
             "count_certificados": count_certificados,
             "total_certificados": total_certificados,
             "count_serums": count_serums,
             "total_serums": total_serums,
-            "ultimas": ventas_cursos[:50],
-            "ultimas_cursos": ventas_cursos[:50],
-            "ultimos_serums": ventas_serums[:50],
+            "ultimas": ventas_cursos,
+            "ultimas_cursos": ventas_cursos,
+            "ultimos_serums": ventas_serums,
             "ventas_cursos": ventas_cursos,
             "ventas_serums": ventas_serums,
             "error": None,
@@ -659,9 +659,10 @@ def get_mi_dashboard_data(
     comision_serums = round(total_serums * 0.20, 2)
     commission = round(comision_cursos + comision_certificados + comision_serums, 2)
 
-    ultimas_cursos = ventas_cursos[:10]
-    ultimos_serums = ventas_serums[:10]
-    ultimos_certificados = cert_stats.get("certificados", [])[:10]
+    # Se devuelve el listado completo del periodo; la paginacion la hace el frontend.
+    ultimas_cursos = ventas_cursos
+    ultimos_serums = ventas_serums
+    ultimos_certificados = cert_stats.get("certificados", [])
 
     return _serialize_dates(
         {
