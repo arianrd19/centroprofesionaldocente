@@ -108,7 +108,7 @@ function DashboardHome() {
       </section>
 
       {!loadingResumen && resumen && (
-        <section className="dash-home__section" aria-label="Resumen del mes">
+        <section className="dash-home__section" aria-label="Resumen del ciclo">
           <div className="dash-home__section-title">
             <span aria-hidden>📅</span>
             <span>Resumen de {resumen.month}</span>
@@ -121,7 +121,7 @@ function DashboardHome() {
                 <span className="dash-home__stat-title">Total ventas</span>
               </div>
               <div className="dash-home__stat-value">{resumen.count ?? 0}</div>
-              <div className="dash-home__stat-desc">Ventas registradas este mes</div>
+              <div className="dash-home__stat-desc">Ventas registradas este ciclo</div>
             </article>
 
             <article className="dash-home__stat dash-home__stat--primary" role="status">
@@ -130,7 +130,7 @@ function DashboardHome() {
                 <span className="dash-home__stat-title">Total volumen (S/)</span>
               </div>
               <div className="dash-home__stat-value">{formatVolumen(resumen.total)}</div>
-              <div className="dash-home__stat-desc">Vendido este mes</div>
+              <div className="dash-home__stat-desc">Vendido este ciclo</div>
             </article>
 
             <article className="dash-home__stat" role="status">
@@ -139,7 +139,7 @@ function DashboardHome() {
                 <span className="dash-home__stat-title">Comisión (S/)</span>
               </div>
               <div className="dash-home__stat-value">{formatVolumen(resumen.commission)}</div>
-              <div className="dash-home__stat-desc">Estimada este mes</div>
+              <div className="dash-home__stat-desc">Estimada este ciclo</div>
             </article>
           </div>
 
@@ -211,7 +211,7 @@ function DashboardHome() {
               {leaderboard.length === 0 ? (
                 <tr>
                   <td colSpan={3} className="dash-home__table-empty">
-                    <span aria-hidden>🏁</span> Aún no hay ventas registradas este mes
+                    <span aria-hidden>🏁</span> Aún no hay ventas registradas este ciclo
                   </td>
                 </tr>
               ) : (
@@ -237,7 +237,7 @@ function DashboardHome() {
         <div className="dash-home__leader-cards" aria-label="Ranking de asesores">
           {leaderboard.length === 0 ? (
             <p className="dash-home__leader-empty">
-              <span aria-hidden>🏁</span> Aún no hay ventas registradas este mes
+              <span aria-hidden>🏁</span> Aún no hay ventas registradas este ciclo
             </p>
           ) : (
             leaderboard.map((u) => (

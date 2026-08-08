@@ -837,7 +837,11 @@ class GoogleSheetService:
 
             key_index = self._index_keys(rows[0])
             k_personal = self._find_key(key_index, ["PERSONAL"], ["personal", "asesor", "vendedor"])
-            k_fecha = self._find_key(key_index, ["FECHA DE LA VENTA", "Marca temporal"], ["fecha"])
+            k_fecha = self._find_key(
+                key_index,
+                ["FECHA DE LA VENTA", "FECHA DE VENTA", "FECHA VENTA"],
+                ["fechadelaventa", "fechadeventa"],
+            )
             k_monto = self._find_key(key_index, ["MONTO DEPOSITADO", "MONTO TOTAL DE LA VENTA", "MONTO DE LA VENTA"], ["monto", "importe"])
             k_cliente = self._find_key(key_index, ["NOMBRE COMPLETO DEL CLIENTE", "CLIENTE"], ["cliente"])
             k_dni = self._find_key(key_index, ["DNI DEL CLIENTE", "DNI"], ["dni"])
@@ -857,7 +861,16 @@ class GoogleSheetService:
 
             filtro_activo = bool(personal_code)
             target = self._extract_code(personal_code).upper() if filtro_activo else None
-            _log.info("Buscando ventas para %s en %s (Rango: %s - %s)", target or "TODOS", ws_title, d_start, d_end)
+            _log.info(
+                "Buscando ventas para %s en %s (Rango por FECHA DE LA VENTA: %s - %s)",
+                target or "TODOS",
+                ws_title,
+                d_start,
+                d_end,
+            )
+
+            if not k_fecha:
+                _log.warning("No se encontró columna FECHA DE LA VENTA en %s", ws_title)
 
             for r in rows:
                 code_raw = r.get(k_personal, "")
@@ -866,14 +879,15 @@ class GoogleSheetService:
                 if filtro_activo and code_val != target:
                     continue
 
-                raw_fecha = r.get(k_fecha, "")
+                # El ciclo comercial se evalúa SOLO con FECHA DE LA VENTA (nunca Marca temporal).
+                raw_fecha = r.get(k_fecha, "") if k_fecha else ""
                 f = self._parse_date_any(raw_fecha) if k_fecha else None
                 
                 if not f:
-                    _log.info("Registro de %s saltado: fecha '%s' no parseable", code_val, raw_fecha)
+                    _log.info("Registro de %s saltado: FECHA DE LA VENTA '%s' no parseable", code_val, raw_fecha)
                 
                 if f and not (d_start <= f <= d_end):
-                    _log.info("Registro de %s saltado: fecha %s fuera de rango", code_val, f)
+                    _log.info("Registro de %s saltado: FECHA DE LA VENTA %s fuera de rango", code_val, f)
                     continue
                 
                 if not f and (d_start > date(1900,1,1)): # Si hay un filtro real y no hay fecha, saltar
@@ -904,8 +918,8 @@ class GoogleSheetService:
         return ventas, total
 
     def get_sales_by_code(self, personal_code: str, d_start, d_end, config):
-        """Filtra ventas por PERSONAL == personal_code en el rango [d_start, d_end].
-        Lee del libro mensual de 'cursos'."""
+        """Filtra ventas por PERSONAL == personal_code en el rango [d_start, d_end]
+        según FECHA DE LA VENTA. Lee del libro mensual de 'cursos'."""
         empty = {"count": 0, "total_monto": 0.0, "ventas": []}
         if not personal_code:
             return empty
@@ -1017,7 +1031,11 @@ class GoogleSheetService:
             # Mapear columnas
             key_index = self._index_keys(rows[0])
             k_personal = self._find_key(key_index, ["PERSONAL"], ["personal", "asesor"])
-            k_fecha = self._find_key(key_index, ["FECHA DE LA VENTA"], ["fecha"])
+            k_fecha = self._find_key(
+                key_index,
+                ["FECHA DE LA VENTA", "FECHA DE VENTA", "FECHA VENTA"],
+                ["fechadelaventa", "fechadeventa"],
+            )
             # Montos: pueden tener diferentes nombres según la hoja
             k_monto_total = self._find_key(key_index, ["MONTO TOTAL DE LA VENTA", "MONTO DE LA VENTA"], ["monto_total"])
             k_monto_depositado = self._find_key(key_index, ["MONTO DEPOSITADO"], ["monto_depositado"])
@@ -1115,7 +1133,8 @@ class GoogleSheetService:
 
     def get_certificates_by_code(self, personal_code: str, d_start, d_end, config):
         """
-        Filtra certificados por PERSONAL == personal_code en el rango [d_start, d_end].
+        Filtra certificados por PERSONAL == personal_code en el rango [d_start, d_end]
+        según FECHA DE LA VENTA.
         Lee del libro mensual de 'certificados'.
         Devuelve: {"count": int, "certificados": list[dict]}
         """
@@ -1148,7 +1167,11 @@ class GoogleSheetService:
             # Mapear columnas de QUERYS CERTIFICADOS
             key_index  = self._index_keys(rows[0])
             k_personal = self._find_key(key_index, ["PERSONAL"],                          ["personal", "asesor"])
-            k_fecha    = self._find_key(key_index, ["FECHA DE LA VENTA", "Marca temporal"],["fecha"])
+            k_fecha    = self._find_key(
+                key_index,
+                ["FECHA DE LA VENTA", "FECHA DE VENTA", "FECHA VENTA"],
+                ["fechadelaventa", "fechadeventa"],
+            )
             k_cliente  = self._find_key(key_index, ["NOMBRE COMPLETO DEL CLIENTE"],       ["cliente", "nombre"])
             k_dni      = self._find_key(key_index, ["DNI DEL CLIENTE"],                   ["dni"])
             k_celular  = self._find_key(key_index, ["CELULAR DEL CLIENTE"],               ["celular"])
@@ -1174,7 +1197,10 @@ class GoogleSheetService:
                 if filtro_activo and code_val != target:
                     continue
 
+                # Ciclo comercial por FECHA DE LA VENTA (no Marca temporal ni fecha de documento).
                 f = self._parse_date_any(r.get(k_fecha, "")) if k_fecha else None
+                if not f and (d_start > date(1900, 1, 1)):
+                    continue
                 if f and not (d_start <= f <= d_end):
                     continue
 

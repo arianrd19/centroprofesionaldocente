@@ -103,19 +103,48 @@ def _sheets_config() -> Dict[str, Any]:
     return {"SHEETS": settings.SHEETS}
 
 
+# Ciclo comercial: del día 7 del mes nombrado al día 6 del mes siguiente
+# (ambos inclusive). Ej. JULIO-2026 → 07/07/2026 – 06/08/2026.
+# Ciclos contiguos sin solape: jul = 07/07–06/08, ago = 07/08–06/09, etc.
+CYCLE_START_DAY = 7
+CYCLE_END_DAY = 6
+
+
 def _month_bounds(y: int, m: int) -> tuple[date, date]:
-    first = date(y, m, 1)
+    """Rango del ciclo comercial del mes m/y: día 7 → día 6 del mes siguiente."""
+    d_start = date(y, m, CYCLE_START_DAY)
     if m == 12:
-        next_first = date(y + 1, 1, 1)
+        d_end = date(y + 1, 1, CYCLE_END_DAY)
     else:
-        next_first = date(y, m + 1, 1)
-    return first, next_first - timedelta(days=1)
+        d_end = date(y, m + 1, CYCLE_END_DAY)
+    return d_start, d_end
+
+
+def _current_cycle_ym(today: Optional[date] = None) -> tuple[int, int]:
+    """Año/mes que nombra el ciclo vigente.
+    Desde el día 7 inclusive corre el ciclo del mes actual; los días 1–6
+    siguen en el ciclo del mes anterior (que cierra el día 6).
+    """
+    today = today or _today_lima()
+    if today.day >= CYCLE_START_DAY:
+        return today.year, today.month
+    if today.month == 1:
+        return today.year - 1, 12
+    return today.year, today.month - 1
+
+
+def _formatear_ciclo(y: int, m: int, d_start: date, d_end: date) -> str:
+    return (
+        f"{MESES_ES[m - 1].capitalize()} {y} "
+        f"({d_start.strftime('%d/%m')} - {d_end.strftime('%d/%m')})"
+    )
 
 
 def _bounds_from_monthly_ws(tab_title: str) -> tuple[date, date, str]:
     """
-    Deduce el rango del mes desde el nombre de la hoja mensual.
+    Deduce el rango del ciclo desde el nombre de la hoja mensual.
     Soporta: JULIO-2026, CERTIFICADOS JULIO-2026, SERUMS JULIO-2026
+    → ciclo del día 7 de ese mes al día 6 del siguiente.
     """
     try:
         prefix, anio_str = tab_title.rsplit("-", 1)
@@ -123,12 +152,12 @@ def _bounds_from_monthly_ws(tab_title: str) -> tuple[date, date, str]:
         mes_nombre = prefix.strip().upper().split()[-1]
         m = MESES[mes_nombre]
         d_start, d_end = _month_bounds(y, m)
-        month_label = f"{MESES_ES[m - 1].capitalize()} {y}"
-        return d_start, d_end, month_label
+        return d_start, d_end, _formatear_ciclo(y, m, d_start, d_end)
     except Exception:
         today = _today_lima()
-        d_start, d_end = _month_bounds(today.year, today.month)
-        return d_start, d_end, _formatear_mes_anio(today)
+        y, m = _current_cycle_ym(today)
+        d_start, d_end = _month_bounds(y, m)
+        return d_start, d_end, _formatear_ciclo(y, m, d_start, d_end)
 
 
 def _bounds_from_tab(tab_title: str) -> tuple[date, date, str]:
@@ -137,18 +166,22 @@ def _bounds_from_tab(tab_title: str) -> tuple[date, date, str]:
 
 
 def _month_range_today() -> tuple[date, date, date]:
+    """Hoy (Lima) y los extremos del ciclo comercial vigente (día 7 → día 6)."""
     today = _today_lima()
-    first = today.replace(day=1)
-    if today.month == 12:
-        next_first = date(today.year + 1, 1, 1)
-    else:
-        next_first = date(today.year, today.month + 1, 1)
-    return today, first, next_first - timedelta(days=1)
+    y, m = _current_cycle_ym(today)
+    d_start, d_end = _month_bounds(y, m)
+    return today, d_start, d_end
 
 
 def _formatear_mes_anio(fecha: date) -> str:
     return f"{MESES_ES[fecha.month - 1].capitalize()} {fecha.year}"
 
+
+def _formatear_ciclo_vigente(today: Optional[date] = None) -> str:
+    today = today or _today_lima()
+    y, m = _current_cycle_ym(today)
+    d_start, d_end = _month_bounds(y, m)
+    return _formatear_ciclo(y, m, d_start, d_end)
 
 def _try_parse_date(value: Any) -> Optional[date]:
     if isinstance(value, datetime):
@@ -433,7 +466,7 @@ def get_home_data(user_email: str) -> Dict[str, Any]:
 
 def get_admin_home_data() -> Dict[str, Any]:
     """Estadisticas agregadas de TODOS los asesores (solo admin): ventas del
-    mes en curso (cursos + certificados + serums) y leaderboard completo."""
+    ciclo en curso (cursos + certificados + serums) y leaderboard completo."""
     tab_title = settings.SHEETS["cursos"]["worksheets"]["registro"]
     d_start, d_end, month_label = _bounds_from_monthly_ws(tab_title)
     cfg = _sheets_config()
@@ -519,8 +552,9 @@ def _resolve_periodo(anio: Optional[int], mes: Optional[int], nofilter: bool):
         return date(1900, 1, 1), date(2999, 12, 31), "Todos"
     if anio and mes:
         try:
-            d_start, d_end = _month_bounds(int(anio), int(mes))
-            return d_start, d_end, f"{MESES_ES[int(mes) - 1].capitalize()} {int(anio)}"
+            y, m = int(anio), int(mes)
+            d_start, d_end = _month_bounds(y, m)
+            return d_start, d_end, _formatear_ciclo(y, m, d_start, d_end)
         except Exception:
             pass
     return _bounds_from_monthly_ws(tab_title)
@@ -717,13 +751,15 @@ def get_cobranza_data(
     if not codigo:
         codigo = gs_service.get_user_code((user_email or username), _sheets_config())
 
+    ciclo_label = _formatear_ciclo_vigente(today)
+
     if not codigo:
         return {
             "cobranzas": [],
             "codigo": "",
             "nofilter": bool(nofilter),
             "username": username or "Usuario",
-            "month": _formatear_mes_anio(today),
+            "month": ciclo_label,
             "error": "No se encontro el codigo del usuario en credenciales.",
         }
 
@@ -736,7 +772,7 @@ def get_cobranza_data(
             "codigo": codigo,
             "nofilter": bool(nofilter),
             "username": username or "Usuario",
-            "month": _formatear_mes_anio(today),
+            "month": ciclo_label,
             "d_start": first_day,
             "d_end": last_day,
         }

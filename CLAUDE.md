@@ -82,3 +82,4 @@ Google credentials resolution (`back/app/core/google_credentials.py`) tries, in 
 - Two parallel Google Sheets client implementations (`google_sheets.py` vs `dashboard_sheets.py`) with duplicated header-mapping logic.
 - Commission calculation in `dashboard_service.py` uses fixed percentages instead of each advisor's individual `Comisión` field.
 - Monthly sheet tab names are hardcoded in `config.py` and must be updated by hand each month.
+- Dashboard sales cycles run from the 7th of the named month to the 6th of the next month (inclusive), not calendar months (`CYCLE_START_DAY` / `CYCLE_END_DAY` in `dashboard_service.py`). Filtering uses **FECHA DE LA VENTA** only (never `Marca temporal`).

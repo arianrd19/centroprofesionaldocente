@@ -15,7 +15,7 @@ function Cobranza() {
       {data.error && <div className="dash-alert">{data.error}</div>}
 
       {(data.cobranzas || []).length === 0 ? (
-        <div className="dash-card dash-empty">No hay cobranzas pendientes este mes.</div>
+        <div className="dash-card dash-empty">No hay cobranzas pendientes este ciclo.</div>
       ) : (
         <div className="dash-table-wrap">
           <table className="dash-table">

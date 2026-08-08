@@ -65,7 +65,7 @@ function DashboardAdminHome() {
 
       {data.error && <div className="dash-alert">{data.error}</div>}
 
-      <section className="dash-home__section" aria-label="Resumen general del mes">
+      <section className="dash-home__section" aria-label="Resumen general del ciclo">
         <div className="dash-home__section-title">
           <span aria-hidden>📅</span>
           <span>Resumen de {data.month} — todos los asesores</span>
@@ -78,7 +78,7 @@ function DashboardAdminHome() {
               <span className="dash-home__stat-title">Total ventas</span>
             </div>
             <div className="dash-home__stat-value">{data.count ?? 0}</div>
-            <div className="dash-home__stat-desc">Ventas registradas este mes</div>
+            <div className="dash-home__stat-desc">Ventas registradas este ciclo</div>
           </article>
 
           <article className="dash-home__stat dash-home__stat--primary" role="status">
@@ -87,7 +87,7 @@ function DashboardAdminHome() {
               <span className="dash-home__stat-title">Total volumen (S/)</span>
             </div>
             <div className="dash-home__stat-value">{formatVolumen(data.total)}</div>
-            <div className="dash-home__stat-desc">Vendido este mes</div>
+            <div className="dash-home__stat-desc">Vendido este ciclo</div>
           </article>
 
           <article className="dash-home__stat" role="status">
@@ -168,7 +168,7 @@ function DashboardAdminHome() {
               {leaderboard.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="dash-home__table-empty">
-                    <span aria-hidden>🏁</span> Aún no hay ventas registradas este mes
+                    <span aria-hidden>🏁</span> Aún no hay ventas registradas este ciclo
                   </td>
                 </tr>
               ) : (
@@ -195,7 +195,7 @@ function DashboardAdminHome() {
         <div className="dash-home__leader-cards" aria-label="Ranking de asesores">
           {leaderboard.length === 0 ? (
             <p className="dash-home__leader-empty">
-              <span aria-hidden>🏁</span> Aún no hay ventas registradas este mes
+              <span aria-hidden>🏁</span> Aún no hay ventas registradas este ciclo
             </p>
           ) : (
             leaderboard.map((u) => (

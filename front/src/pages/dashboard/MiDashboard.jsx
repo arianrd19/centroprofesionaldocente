@@ -290,7 +290,7 @@ function MiDashboard() {
                   {pageItems.length === 0 ? (
                     <tr>
                       <td colSpan={showAsesor ? 8 : 7} className="dash-panel__empty">
-                        {emptyLabel('Sin ventas de cursos este mes')}
+                        {emptyLabel('Sin ventas de cursos este ciclo')}
                       </td>
                     </tr>
                   ) : (
@@ -304,7 +304,7 @@ function MiDashboard() {
           <div className="dash-panel__sale-cards dash-panel__sale-cards--mobile-only">
             {pageItems.length === 0 ? (
               <article className="dash-panel__sale-card">
-                <div className="dash-panel__sale-title">{emptyLabel('Sin ventas de cursos este mes')}</div>
+                <div className="dash-panel__sale-title">{emptyLabel('Sin ventas de cursos este ciclo')}</div>
               </article>
             ) : (
               pageItems.map((v, i) => <VentaCard key={i} v={v} showAsesor={showAsesor} />)
@@ -335,7 +335,7 @@ function MiDashboard() {
                   {pageItems.length === 0 ? (
                     <tr>
                       <td colSpan={showAsesor ? 7 : 6} className="dash-panel__empty">
-                        {emptyLabel('Sin ventas serums este mes')}
+                        {emptyLabel('Sin ventas serums este ciclo')}
                       </td>
                     </tr>
                   ) : (
@@ -359,7 +359,7 @@ function MiDashboard() {
           <div className="dash-panel__sale-cards dash-panel__sale-cards--mobile-only">
             {pageItems.length === 0 ? (
               <article className="dash-panel__sale-card">
-                <div className="dash-panel__sale-title">{emptyLabel('Sin ventas serums este mes')}</div>
+                <div className="dash-panel__sale-title">{emptyLabel('Sin ventas serums este ciclo')}</div>
               </article>
             ) : (
               pageItems.map((v, i) => <SerumsCard key={i} v={v} showAsesor={showAsesor} />)
@@ -391,7 +391,7 @@ function MiDashboard() {
                   {pageItems.length === 0 ? (
                     <tr>
                       <td colSpan={showAsesor ? 8 : 7} className="dash-panel__empty">
-                        {emptyLabel('Sin certificados este mes')}
+                        {emptyLabel('Sin certificados este ciclo')}
                       </td>
                     </tr>
                   ) : (
@@ -416,7 +416,7 @@ function MiDashboard() {
           <div className="dash-panel__sale-cards dash-panel__sale-cards--mobile-only">
             {pageItems.length === 0 ? (
               <article className="dash-panel__sale-card">
-                <div className="dash-panel__sale-title">{emptyLabel('Sin certificados este mes')}</div>
+                <div className="dash-panel__sale-title">{emptyLabel('Sin certificados este ciclo')}</div>
               </article>
             ) : (
               pageItems.map((c, i) => <CertificadoCard key={i} c={c} showAsesor={showAsesor} />)
